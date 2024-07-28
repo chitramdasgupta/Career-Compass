@@ -4,6 +4,8 @@ import com.dasgupta.careercompass.Company.Company;
 import com.dasgupta.careercompass.Company.CompanyRepository;
 import com.dasgupta.careercompass.Job.Job;
 import com.dasgupta.careercompass.Job.JobRepository;
+import com.dasgupta.careercompass.post.Post;
+import com.dasgupta.careercompass.post.PostRepository;
 import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -16,23 +18,27 @@ import java.util.List;
 public class DataLoader {
     private static final int NUM_COMPANIES = 100;
     private static final int NUM_JOBS_PER_COMPANY = 25;
+    private static final int NUM_POSTS = 100;
 
     private final Faker faker = new Faker();
 
     private final CompanyRepository companyRepository;
     private final JobRepository jobRepository;
+    private final PostRepository postRepository;
 
     @Autowired
-    public DataLoader(CompanyRepository companyRepository, JobRepository jobRepository) {
+    public DataLoader(CompanyRepository companyRepository, JobRepository jobRepository, PostRepository postRepository) {
         this.companyRepository = companyRepository;
         this.jobRepository = jobRepository;
+        this.postRepository = postRepository;
     }
 
     @Bean
     public CommandLineRunner loadData() {
-        return (args) -> {
+        return args -> {
             loadCompanies();
             loadJobs();
+            loadPosts();
         };
     }
 
@@ -61,6 +67,18 @@ public class DataLoader {
 
                     jobRepository.save(job);
                 }
+            }
+        }
+    }
+
+    private void loadPosts() {
+        if (postRepository.count() == 0) {
+            for (int i = 0; i < NUM_POSTS; i++) {
+                Post post = new Post();
+                post.setTitle(faker.book().title());
+                post.setContent(faker.lorem().paragraphs(3).stream().reduce((a, b) -> a + "\n\n" + b).orElse(""));
+
+                postRepository.save(post);
             }
         }
     }
