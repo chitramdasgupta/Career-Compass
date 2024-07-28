@@ -2,13 +2,20 @@ package com.dasgupta.careercompass.Job;
 
 import com.dasgupta.careercompass.Company.Company;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
 
 @Entity
+@Table(name = "job", indexes = {
+        @Index(name = "idx_job_on_company_id", columnList = "company_id")
+})
 @Getter
 @Setter
 @ToString
@@ -18,8 +25,12 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank
+    @Column(nullable = false)
     private String title;
 
+    @NotBlank
+    @Column(nullable = false)
     private String description;
 
     @NotNull
