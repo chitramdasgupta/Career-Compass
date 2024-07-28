@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.Company;
+package com.dasgupta.careercompass.company;
 
 import java.util.List;
 import java.util.Optional;

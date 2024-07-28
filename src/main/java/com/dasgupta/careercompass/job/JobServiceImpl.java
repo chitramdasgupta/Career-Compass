@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.Job;
+package com.dasgupta.careercompass.job;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

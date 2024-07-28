@@ -1,6 +1,6 @@
-package com.dasgupta.careercompass.Job;
+package com.dasgupta.careercompass.job;
 
-import com.dasgupta.careercompass.Company.Company;
+import com.dasgupta.careercompass.company.Company;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

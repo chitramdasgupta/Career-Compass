@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.Job;
+package com.dasgupta.careercompass.job;
 
 import java.util.List;
 import java.util.Optional;

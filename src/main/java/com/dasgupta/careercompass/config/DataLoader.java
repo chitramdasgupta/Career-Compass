@@ -1,9 +1,9 @@
 package com.dasgupta.careercompass.config;
 
-import com.dasgupta.careercompass.Company.Company;
-import com.dasgupta.careercompass.Company.CompanyRepository;
-import com.dasgupta.careercompass.Job.Job;
-import com.dasgupta.careercompass.Job.JobRepository;
+import com.dasgupta.careercompass.company.Company;
+import com.dasgupta.careercompass.company.CompanyRepository;
+import com.dasgupta.careercompass.job.Job;
+import com.dasgupta.careercompass.job.JobRepository;
 import com.dasgupta.careercompass.post.Post;
 import com.dasgupta.careercompass.post.PostRepository;
 import com.github.javafaker.Faker;
