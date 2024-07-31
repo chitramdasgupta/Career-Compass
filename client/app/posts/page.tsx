@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Post } from "./types";
-import { fetchPosts } from "./queries";
+import { fetchPosts } from "./postsApi";
 import PostList from "./components/PostList";
 
 export default function Posts() {

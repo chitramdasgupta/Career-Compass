@@ -1,7 +1,7 @@
 import React from "react";
 import PostItem from "./../Post";
 import { Post } from "../../types";
-import { PostSkeletonList } from "../PostSkeleton";
+import { SkeletonList } from "../PostSkeleton/skeletonList";
 
 interface PostListProps {
   posts: Post[];
@@ -10,7 +10,7 @@ interface PostListProps {
 
 const PostList: React.FC<PostListProps> = ({ posts, loading }) => {
   if (loading) {
-    return <PostSkeletonList count={6} />;
+    return <SkeletonList count={6} />;
   }
 
   return (
