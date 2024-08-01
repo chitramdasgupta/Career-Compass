@@ -4,11 +4,12 @@ import { Card, CardContent, CardHeader } from "@mui/material";
 
 interface JobItemProps {
   job: Job;
+  onSelect: (job: Job) => void;
 }
 
-export const JobItem: React.FC<JobItemProps> = ({ job }) => {
+export const JobItem: React.FC<JobItemProps> = ({ job, onSelect }) => {
   return (
-    <Card className="my-4">
+    <Card className="mb-4 hover:cursor-pointer" onClick={() => onSelect(job)}>
       <CardHeader title={job.title} subheader={job.company.name} />
       <CardContent>
         <p>{job.description}</p>
