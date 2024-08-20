@@ -67,10 +67,15 @@ public class DataLoader {
                     Job job = new Job();
                     job.setTitle(faker.job().title());
 
-                    String description = faker.lorem().paragraph() + "\n\n" +
-                            faker.lorem().paragraph() + "\n\n" +
-                            faker.lorem().paragraph();
+                    String description = faker.lorem().paragraph() + "\n\n" + faker.lorem().paragraph();
                     job.setDescription(description);
+
+                    if (faker.random().nextBoolean()) {
+                        job.setMinimumRequirement(faker.lorem().paragraph());
+                    }
+                    if (faker.random().nextBoolean()) {
+                        job.setDesiredRequirement(faker.lorem().paragraph());
+                    }
 
                     job.setCompany(company);
 

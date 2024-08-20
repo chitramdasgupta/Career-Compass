@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.math.BigDecimal;
@@ -31,7 +33,7 @@ public class Job {
     private String title;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
     @Column(columnDefinition = "TEXT")
@@ -47,13 +49,14 @@ public class Job {
 
     private String city;
 
-    @NotBlank
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CountryCode country;
 
     @NotNull
     @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     @Column(nullable = false)
     private JobLocation jobLocation;
 
