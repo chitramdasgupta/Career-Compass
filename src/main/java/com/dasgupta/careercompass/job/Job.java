@@ -1,6 +1,8 @@
 package com.dasgupta.careercompass.job;
 
 import com.dasgupta.careercompass.company.Company;
+import com.neovisionaries.i18n.CountryCode;
+import com.neovisionaries.i18n.CurrencyCode;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,12 +12,11 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
-@Table(name = "job", indexes = {
-        @Index(name = "idx_job_on_company_id", columnList = "company_id")
-})
+@Table(name = "job", indexes = {@Index(name = "idx_job_on_company_id", columnList = "company_id")})
 @Getter
 @Setter
 @ToString
@@ -33,10 +34,37 @@ public class Job {
     @Column(nullable = false)
     private String description;
 
+    @Column(columnDefinition = "TEXT")
+    private String minimumRequirement;
+
+    @Column(columnDefinition = "TEXT")
+    private String desiredRequirement;
+
     @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private Company company;
+
+    private String city;
+
+    @NotBlank
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CountryCode country;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private JobLocation jobLocation;
+
+    private BigDecimal minimumSalary;
+
+    private BigDecimal maximumSalary;
+
+    @Enumerated(EnumType.STRING)
+    private CurrencyCode currency;
+
+    // Boilerplate
 
     @Override
     public final boolean equals(Object o) {
