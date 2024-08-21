@@ -1,11 +1,13 @@
 package com.dasgupta.careercompass.post;
 
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.Optional;
 
 public interface PostService {
-    List<Post> getAllPosts();
+    Page<Post> getAllPosts(Pageable pageable);
 
     Optional<Post> getPostById(int id);
 }

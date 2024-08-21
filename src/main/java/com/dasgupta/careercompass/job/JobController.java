@@ -21,8 +21,7 @@ public class JobController {
     }
 
     @GetMapping("")
-    public Page<Job> getAllJobs(@RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_NUMBER) int page,
-                                @RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_SIZE) int size) {
+    public Page<Job> getAllJobs(@RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_NUMBER) int page, @RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_SIZE) int size) {
         Pageable pageable = PageRequest.of(page, size);
         return jobService.getAllJobs(pageable);
     }
