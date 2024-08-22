@@ -29,7 +29,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User signup(RegisterUserDto input) {
+    public User register(RegisterUserDto input) {
         User user = new User()
                 .setEmail(input.getEmail())
                 .setPassword(passwordEncoder.encode(input.getPassword()));
