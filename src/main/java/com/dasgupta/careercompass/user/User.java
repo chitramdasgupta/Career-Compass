@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,9 +13,10 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "user", indexes = {@Index(name = "idx_user_on_email", columnList = "email")})
+@Table(name = "users", indexes = {@Index(name = "idx_user_on_email", columnList = "email")})
 @Getter
 @Setter
+@Accessors(chain = true)
 @ToString
 @RequiredArgsConstructor
 public class User implements UserDetails {
