@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.services;
+package com.dasgupta.careercompass.authentication;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

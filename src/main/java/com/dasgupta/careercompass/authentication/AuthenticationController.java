@@ -1,6 +1,5 @@
 package com.dasgupta.careercompass.authentication;
 
-import com.dasgupta.careercompass.services.JwtService;
 import com.dasgupta.careercompass.user.LoginUserDto;
 import com.dasgupta.careercompass.user.RegisterUserDto;
 import com.dasgupta.careercompass.user.User;

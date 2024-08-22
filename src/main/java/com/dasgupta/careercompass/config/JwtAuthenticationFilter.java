@@ -1,6 +1,6 @@
 package com.dasgupta.careercompass.config;
 
-import com.dasgupta.careercompass.services.JwtService;
+import com.dasgupta.careercompass.authentication.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -10,16 +10,4 @@ public class CareerCompassApplication {
         SpringApplication.run(CareerCompassApplication.class, args);
     }
 
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(@NonNull CorsRegistry registry) {
-//                registry.addMapping("/**")
-//                        .allowedOrigins("*")
-//                        .allowedMethods("GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS");
-//            }
-//        };
-//    }
-
 }
