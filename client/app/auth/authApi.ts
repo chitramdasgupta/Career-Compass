@@ -1,4 +1,5 @@
 import axiosInstance from "../shared/utils/axios";
+import Cookies from 'js-cookie';
 import { LoginResponse, LoginUserDto, RegisterUserDto } from "./types";
 
 const AUTH_URL = "/auth";
@@ -15,7 +16,7 @@ export async function registerUser(registerUserDto: RegisterUserDto): Promise<vo
 export async function loginUser(loginUserDto: LoginUserDto): Promise<LoginResponse> {
   try {
     const response = await axiosInstance.post<LoginResponse>(`${AUTH_URL}/login`, loginUserDto);
-    localStorage.setItem('token', response.data.token);
+    Cookies.set('token', response.data.token, { expires: 7, path: '/' });
     return response.data;
   } catch (error) {
     console.error("Error logging in user:", error);

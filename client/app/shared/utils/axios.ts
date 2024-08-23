@@ -1,5 +1,5 @@
-// authApi.ts
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:8080',
@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
 
 // Add a request interceptor to include the JWT token in the headers
 axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = Cookies.get('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

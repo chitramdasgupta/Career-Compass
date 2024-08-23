@@ -8,8 +8,10 @@ import { PaginatedResponse } from "../shared/types/paginatedResponseType";
 import { Virtuoso } from "react-virtuoso";
 import { JobItem } from "./jobItem";
 import { SkeletonList } from "../posts/components/PostSkeleton/skeletonList";
+import { useRouter } from "next/navigation";
 
 export default function Jobs() {
+  const router = useRouter();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
