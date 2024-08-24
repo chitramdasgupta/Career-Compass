@@ -14,10 +14,10 @@ public class JobDto {
     private String minimumRequirement;
     private String desiredRequirement;
     private String city;
-    private String country; // This should be a String
-    private String jobLocation; // This should be a String
+    private String country;
+    private String jobLocation;
     private BigDecimal minimumSalary;
     private BigDecimal maximumSalary;
-    private String currency; // This should be a String
+    private String currency;
     private Long questionnaireId;
 }

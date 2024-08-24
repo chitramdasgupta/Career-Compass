@@ -24,7 +24,7 @@ public class DataLoader {
     private static final int NUM_COMPANIES = 100;
     private static final int NUM_JOBS_PER_COMPANY = 25;
     private static final int NUM_POSTS = 100;
-    private static final int NUM_QUESTIONS = 10; // Number of questions to create for each questionnaire
+    private static final int NUM_QUESTIONS = 10;
 
     private final Faker faker = new Faker();
 
@@ -65,12 +65,10 @@ public class DataLoader {
 
 
     private void loadQuestions() {
-        // This method creates a set of questions that can be reused
         for (int i = 0; i < NUM_QUESTIONS; i++) {
             Question question = new Question();
             question.setText(faker.lorem().sentence());
             question.setType(QuestionType.values()[faker.random().nextInt(QuestionType.values().length)]);
-            // Save the question to the database (assuming you have a QuestionRepository)
             questionRepository.save(question);
         }
     }
@@ -78,7 +76,7 @@ public class DataLoader {
     private void loadJobs() {
         if (jobRepository.count() == 0) {
             List<Company> companies = companyRepository.findAll();
-            List<Question> questions = questionRepository.findAll(); // Fetch all questions
+            List<Question> questions = questionRepository.findAll();
 
             for (Company company : companies) {
                 for (int i = 0; i < NUM_JOBS_PER_COMPANY; i++) {
@@ -102,22 +100,20 @@ public class DataLoader {
                     job.setMaximumSalary(BigDecimal.valueOf(faker.number().randomDouble(2, 60000, 120000)));
                     job.setCurrency(faker.options().option(CurrencyCode.class));
 
-                    // Create a questionnaire for the job
                     Questionnaire questionnaire = new Questionnaire();
                     questionnaire.setDescription(faker.lorem().sentence());
-                    questionnaire.setJob(job); // Set the job for the questionnaire
-                    job.setQuestionnaire(questionnaire); // Set the questionnaire in the job
+                    questionnaire.setJob(job);
+                    job.setQuestionnaire(questionnaire);
 
-                    // Create questionnaire questions
                     for (int j = 0; j < NUM_QUESTIONS; j++) {
                         QuestionnaireQuestion questionnaireQuestion = new QuestionnaireQuestion();
                         questionnaireQuestion.setQuestionnaire(questionnaire);
-                        questionnaireQuestion.setQuestion(questions.get(faker.random().nextInt(questions.size()))); // Randomly select a question
-                        questionnaireQuestion.setDisplayOrder(j); // Set the order of the question
-                        questionnaire.getQuestionnaireQuestions().add(questionnaireQuestion); // Add to the questionnaire
+                        questionnaireQuestion.setQuestion(questions.get(faker.random().nextInt(questions.size())));
+                        questionnaireQuestion.setDisplayOrder(j);
+                        questionnaire.getQuestionnaireQuestions().add(questionnaireQuestion);
                     }
 
-                    jobRepository.save(job); // Save the job (which also saves the questionnaire due to cascade)
+                    jobRepository.save(job);
                 }
             }
         }

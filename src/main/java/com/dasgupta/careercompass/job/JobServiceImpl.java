@@ -43,7 +43,6 @@ public class JobServiceImpl implements JobService {
         dto.setMinimumSalary(job.getMinimumSalary());
         dto.setMaximumSalary(job.getMaximumSalary());
 
-        // Set the questionnaire ID
         dto.setQuestionnaireId(job.getQuestionnaire() != null ? job.getQuestionnaire().getId() : null);
 
         return dto;
