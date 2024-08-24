@@ -1,7 +1,6 @@
-package com.dasgupta.careercompass.jobApplication;
+package com.dasgupta.careercompass.questionnaire;
 
-import com.dasgupta.careercompass.job.Job;
-import com.dasgupta.careercompass.questionnaire.Questionnaire;
+import com.dasgupta.careercompass.jobApplication.JobApplication;
 import com.dasgupta.careercompass.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,19 +17,20 @@ import lombok.ToString;
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class JobApplication {
+public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn
-    private Job job;
-
-    @ManyToOne
-    @JoinColumn
+    @OneToOne(optional = false)
     private User user;
 
-    @OneToOne(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Questionnaire questionnaire;
+    @OneToOne(optional = false)
+    private JobApplication jobApplication;
+
+    @OneToOne(optional = false)
+    private Question question;
+
+    @Column(columnDefinition = "TEXT")
+    private String response;
 }

@@ -6,24 +6,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Set;
-
 @Entity
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"questionnaire_id", "order"})
+)
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Question {
+public class QuestionnaireQuestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String text;
+    @ManyToOne
+    private Questionnaire questionnaire;
 
-    @Enumerated(EnumType.STRING)
-    private QuestionType type;
+    @ManyToOne
+    private Question question;
 
-    @OneToMany
-    @ToString.Exclude
-    private Set<Questionnaire> questionnaires;
+    private Integer order;
 }

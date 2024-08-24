@@ -26,6 +26,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         JobApplication jobApplication = new JobApplication();
         jobApplication.setJob(job);
         jobApplication.setUser(user);
+        jobApplication.setQuestionnaire(job.getQuestionnaire());
 
         return jobApplicationRepository.save(jobApplication);
     }

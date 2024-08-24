@@ -2,6 +2,7 @@ package com.dasgupta.careercompass.job;
 
 import com.dasgupta.careercompass.company.Company;
 import com.dasgupta.careercompass.jobApplication.JobApplication;
+import com.dasgupta.careercompass.questionnaire.Questionnaire;
 import com.neovisionaries.i18n.CountryCode;
 import com.neovisionaries.i18n.CurrencyCode;
 import jakarta.persistence.*;
@@ -72,6 +73,9 @@ public class Job {
     @OneToMany(mappedBy = "job")
     @ToString.Exclude
     private Set<JobApplication> jobApplications;
+
+    @OneToOne(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Questionnaire questionnaire;
 
     // Boilerplate
 
