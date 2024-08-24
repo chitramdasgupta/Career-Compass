@@ -1,7 +1,6 @@
 package com.dasgupta.careercompass.jobApplication;
 
 import com.dasgupta.careercompass.job.Job;
-import com.dasgupta.careercompass.questionnaire.Questionnaire;
 import com.dasgupta.careercompass.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "Job_application", indexes = {
+@Table(name = "job_application", indexes = {
         @Index(name = "idx_job_on_job_application", columnList = "job_id"),
         @Index(name = "idx_user_on_job_application", columnList = "user_id")
 })
@@ -30,7 +29,4 @@ public class JobApplication {
     @ManyToOne
     @JoinColumn
     private User user;
-
-    @OneToOne(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Questionnaire questionnaire;
 }

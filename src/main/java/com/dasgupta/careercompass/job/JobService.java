@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface JobService {
-    Page<Job> getAllJobs(Pageable pageable);
+    Page<JobDto> getAllJobs(Pageable pageable);
 
-    Optional<Job> getJobById(int id);
+    Optional<JobDto> getJobById(int id);
 }

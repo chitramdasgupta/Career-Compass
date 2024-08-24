@@ -7,6 +7,7 @@ import com.dasgupta.careercompass.job.JobLocation;
 import com.dasgupta.careercompass.job.JobRepository;
 import com.dasgupta.careercompass.post.Post;
 import com.dasgupta.careercompass.post.PostRepository;
+import com.dasgupta.careercompass.questionnaire.*;
 import com.github.javafaker.Faker;
 import com.neovisionaries.i18n.CountryCode;
 import com.neovisionaries.i18n.CurrencyCode;
@@ -23,24 +24,28 @@ public class DataLoader {
     private static final int NUM_COMPANIES = 100;
     private static final int NUM_JOBS_PER_COMPANY = 25;
     private static final int NUM_POSTS = 100;
+    private static final int NUM_QUESTIONS = 10; // Number of questions to create for each questionnaire
 
     private final Faker faker = new Faker();
 
     private final CompanyRepository companyRepository;
     private final JobRepository jobRepository;
     private final PostRepository postRepository;
+    private final QuestionRepository questionRepository;
 
     @Autowired
-    public DataLoader(CompanyRepository companyRepository, JobRepository jobRepository, PostRepository postRepository) {
+    public DataLoader(CompanyRepository companyRepository, JobRepository jobRepository, PostRepository postRepository, QuestionRepository questionRepository) {
         this.companyRepository = companyRepository;
         this.jobRepository = jobRepository;
         this.postRepository = postRepository;
+        this.questionRepository = questionRepository;
     }
 
     @Bean
     public CommandLineRunner loadData() {
         return args -> {
             loadCompanies();
+            loadQuestions();
             loadJobs();
             loadPosts();
         };
@@ -58,9 +63,22 @@ public class DataLoader {
         }
     }
 
+
+    private void loadQuestions() {
+        // This method creates a set of questions that can be reused
+        for (int i = 0; i < NUM_QUESTIONS; i++) {
+            Question question = new Question();
+            question.setText(faker.lorem().sentence());
+            question.setType(QuestionType.values()[faker.random().nextInt(QuestionType.values().length)]);
+            // Save the question to the database (assuming you have a QuestionRepository)
+            questionRepository.save(question);
+        }
+    }
+
     private void loadJobs() {
         if (jobRepository.count() == 0) {
             List<Company> companies = companyRepository.findAll();
+            List<Question> questions = questionRepository.findAll(); // Fetch all questions
 
             for (Company company : companies) {
                 for (int i = 0; i < NUM_JOBS_PER_COMPANY; i++) {
@@ -78,19 +96,32 @@ public class DataLoader {
                     }
 
                     job.setCompany(company);
-
                     job.setJobLocation(JobLocation.values()[faker.random().nextInt(JobLocation.values().length)]);
                     job.setCountry(faker.options().option(CountryCode.class));
                     job.setMinimumSalary(BigDecimal.valueOf(faker.number().randomDouble(2, 30000, 50000)));
                     job.setMaximumSalary(BigDecimal.valueOf(faker.number().randomDouble(2, 60000, 120000)));
                     job.setCurrency(faker.options().option(CurrencyCode.class));
 
-                    jobRepository.save(job);
+                    // Create a questionnaire for the job
+                    Questionnaire questionnaire = new Questionnaire();
+                    questionnaire.setDescription(faker.lorem().sentence());
+                    questionnaire.setJob(job); // Set the job for the questionnaire
+                    job.setQuestionnaire(questionnaire); // Set the questionnaire in the job
+
+                    // Create questionnaire questions
+                    for (int j = 0; j < NUM_QUESTIONS; j++) {
+                        QuestionnaireQuestion questionnaireQuestion = new QuestionnaireQuestion();
+                        questionnaireQuestion.setQuestionnaire(questionnaire);
+                        questionnaireQuestion.setQuestion(questions.get(faker.random().nextInt(questions.size()))); // Randomly select a question
+                        questionnaireQuestion.setDisplayOrder(j); // Set the order of the question
+                        questionnaire.getQuestionnaireQuestions().add(questionnaireQuestion); // Add to the questionnaire
+                    }
+
+                    jobRepository.save(job); // Save the job (which also saves the questionnaire due to cascade)
                 }
             }
         }
     }
-
 
     private void loadPosts() {
         if (postRepository.count() == 0) {

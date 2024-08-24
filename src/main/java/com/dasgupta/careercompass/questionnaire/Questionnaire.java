@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,9 +23,9 @@ public class Questionnaire {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany
+    @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private Set<Question> questions;
+    private Set<QuestionnaireQuestion> questionnaireQuestions = new HashSet<>();
 
     @OneToOne(optional = false)
     @JoinColumn(unique = true)

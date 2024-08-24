@@ -21,15 +21,15 @@ public class JobController {
     }
 
     @GetMapping("")
-    public Page<Job> getAllJobs(@RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_NUMBER) int page, @RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_SIZE) int size) {
+    public Page<JobDto> getAllJobs(@RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_NUMBER) int page, @RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_SIZE) int size) {
         Pageable pageable = PageRequest.of(page, size);
         return jobService.getAllJobs(pageable);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Job> getJobById(@PathVariable int id) {
-        Optional<Job> job = jobService.getJobById(id);
+    public ResponseEntity<JobDto> getJobById(@PathVariable int id) {
+        Optional<JobDto> jobDto = jobService.getJobById(id);
 
-        return job.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return jobDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

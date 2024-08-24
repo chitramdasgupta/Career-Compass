@@ -9,10 +9,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "Job_application", indexes = {
-        @Index(name = "idx_job_on_job_application", columnList = "job_id"),
-        @Index(name = "idx_user_on_job_application", columnList = "user_id")
-})
 @Getter
 @Setter
 @ToString

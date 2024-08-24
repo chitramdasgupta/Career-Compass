@@ -19,12 +19,33 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Page<Job> getAllJobs(Pageable pageable) {
-        return jobRepository.findAll(pageable);
+    public Page<JobDto> getAllJobs(Pageable pageable) {
+        Page<Job> jobPage = jobRepository.findAll(pageable);
+        return jobPage.map(this::convertToDto);
     }
 
     @Override
-    public Optional<Job> getJobById(int id) {
-        return jobRepository.findById(id);
+    public Optional<JobDto> getJobById(int id) {
+        return jobRepository.findById(id).map(this::convertToDto);
+    }
+
+    private JobDto convertToDto(Job job) {
+        JobDto dto = new JobDto();
+        dto.setId(job.getId());
+        dto.setTitle(job.getTitle());
+        dto.setDescription(job.getDescription());
+        dto.setMinimumRequirement(job.getMinimumRequirement());
+        dto.setDesiredRequirement(job.getDesiredRequirement());
+        dto.setCity(job.getCity());
+        dto.setCountry(job.getCountry() != null ? job.getCountry().getName() : null);
+        dto.setJobLocation(job.getJobLocation() != null ? job.getJobLocation().name() : null);
+        dto.setCurrency(job.getCurrency() != null ? job.getCurrency().getName() : null);
+        dto.setMinimumSalary(job.getMinimumSalary());
+        dto.setMaximumSalary(job.getMaximumSalary());
+
+        // Set the questionnaire ID
+        dto.setQuestionnaireId(job.getQuestionnaire() != null ? job.getQuestionnaire().getId() : null);
+
+        return dto;
     }
 }

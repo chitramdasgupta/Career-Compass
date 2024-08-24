@@ -7,9 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"questionnaire_id", "order"})
-)
+@Table(name = "questionnaire_question", uniqueConstraints = @UniqueConstraint(columnNames = {"questionnaire_id", "display_order"}))
 @Getter
 @Setter
 @ToString
@@ -20,10 +18,12 @@ public class QuestionnaireQuestion {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "questionnaire_id", nullable = false)
     private Questionnaire questionnaire;
 
     @ManyToOne
+    @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
-    private Integer order;
+    private Integer displayOrder;
 }
