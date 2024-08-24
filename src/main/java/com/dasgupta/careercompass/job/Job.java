@@ -1,6 +1,7 @@
 package com.dasgupta.careercompass.job;
 
 import com.dasgupta.careercompass.company.Company;
+import com.dasgupta.careercompass.jobApplication.JobApplication;
 import com.neovisionaries.i18n.CountryCode;
 import com.neovisionaries.i18n.CurrencyCode;
 import jakarta.persistence.*;
@@ -16,6 +17,7 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "job", indexes = {@Index(name = "idx_job_on_company_id", columnList = "company_id")})
@@ -66,6 +68,10 @@ public class Job {
 
     @Enumerated(EnumType.STRING)
     private CurrencyCode currency;
+
+    @OneToMany(mappedBy = "job")
+    @ToString.Exclude
+    private Set<JobApplication> jobApplications;
 
     // Boilerplate
 

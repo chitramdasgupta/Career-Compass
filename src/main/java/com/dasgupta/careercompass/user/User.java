@@ -1,5 +1,6 @@
 package com.dasgupta.careercompass.user;
 
+import com.dasgupta.careercompass.jobApplication.JobApplication;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users", indexes = {@Index(name = "idx_user_on_email", columnList = "email")})
@@ -29,6 +31,10 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    private Set<JobApplication> jobApplications;
 
     // Returns the user's roles
     @Override
