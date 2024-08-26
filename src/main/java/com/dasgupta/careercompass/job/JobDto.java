@@ -1,8 +1,8 @@
 package com.dasgupta.careercompass.job;
 
+import com.dasgupta.careercompass.company.CompanyDto;
 import lombok.Getter;
 import lombok.Setter;
-import com.dasgupta.careercompass.company.CompanyDto;
 
 import java.math.BigDecimal;
 

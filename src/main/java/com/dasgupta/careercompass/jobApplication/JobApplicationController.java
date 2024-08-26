@@ -23,22 +23,6 @@ public class JobApplicationController {
         this.jobApplicationService = jobApplicationService;
     }
 
-    @PostMapping("create")
-    public ResponseEntity<JobApplicationDto> submitApplication(@RequestBody JobApplicationSubmissionDto submissionDTO) {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            User user = (User) authentication.getPrincipal();
-
-            JobApplication jobApplication = jobApplicationService.createJobApplication(submissionDTO, user);
-
-            JobApplicationDto responseDto = getJobApplicationDto(jobApplication, user);
-
-            return ResponseEntity.ok(responseDto);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
-
     private static JobApplicationDto getJobApplicationDto(JobApplication jobApplication, User user) {
         JobApplicationDto responseDto = new JobApplicationDto();
         responseDto.setId(jobApplication.getId());
@@ -54,6 +38,22 @@ public class JobApplicationController {
         userResponseDto.setEmail(user.getEmail());
         responseDto.setUser(userResponseDto);
         return responseDto;
+    }
+
+    @PostMapping("create")
+    public ResponseEntity<JobApplicationDto> submitApplication(@RequestBody JobApplicationSubmissionDto submissionDTO) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) authentication.getPrincipal();
+
+            JobApplication jobApplication = jobApplicationService.createJobApplication(submissionDTO, user);
+
+            JobApplicationDto responseDto = getJobApplicationDto(jobApplication, user);
+
+            return ResponseEntity.ok(responseDto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
 }
