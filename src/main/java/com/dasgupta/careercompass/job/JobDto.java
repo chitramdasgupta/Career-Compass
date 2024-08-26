@@ -2,6 +2,7 @@ package com.dasgupta.careercompass.job;
 
 import lombok.Getter;
 import lombok.Setter;
+import com.dasgupta.careercompass.company.CompanyDto;
 
 import java.math.BigDecimal;
 
@@ -20,4 +21,5 @@ public class JobDto {
     private BigDecimal maximumSalary;
     private String currency;
     private Long questionnaireId;
+    private CompanyDto company;
 }

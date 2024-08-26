@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import com.dasgupta.careercompass.company.CompanyDto;
 
 import java.util.Optional;
 
@@ -42,6 +43,17 @@ public class JobServiceImpl implements JobService {
         dto.setCurrency(job.getCurrency() != null ? job.getCurrency().getName() : null);
         dto.setMinimumSalary(job.getMinimumSalary());
         dto.setMaximumSalary(job.getMaximumSalary());
+        
+        // Convert and set the CompanyDto
+        if (job.getCompany() != null) {
+            CompanyDto companyDto = new CompanyDto();
+            companyDto.setId(job.getCompany().getId());
+            companyDto.setName(job.getCompany().getName());
+            companyDto.setDescription(job.getCompany().getDescription());
+            dto.setCompany(companyDto);
+        } else {
+            dto.setCompany(null);
+        }
 
         dto.setQuestionnaireId(job.getQuestionnaire() != null ? job.getQuestionnaire().getId() : null);
 

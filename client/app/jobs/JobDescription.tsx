@@ -1,17 +1,11 @@
 import React from "react";
 import { Job } from "@/app/jobs/types";
 import { SkeletonList } from "../posts/components/PostSkeleton/skeletonList";
-import Button from "@mui/material/Button/";
+import Button from "@mui/material/Button";
 import LaunchIcon from "@mui/icons-material/Launch";
-import {
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Paper,
-} from "@mui/material";
+import { Card, CardActions, CardContent, CardHeader } from "@mui/material";
 import Link from "next/link";
-import { BookmarkAdd, BookmarkAddOutlined } from "@mui/icons-material";
+import { BookmarkAddOutlined } from "@mui/icons-material";
 
 interface JobDescriptionProps {
   job: Job | null;
@@ -32,9 +26,16 @@ export const JobDescription: React.FC<JobDescriptionProps> = ({ job }) => {
         sx={{ paddingBottom: "8px" }}
       />
       <CardActions sx={{ padding: "0 16px 16px 16px" }}>
-        <Button size="small" variant="contained" endIcon={<LaunchIcon />}>
-          Apply Now
-        </Button>
+        <Link href={`/jobs/${job.id}/questionnaire`} passHref>
+          <Button
+            size="small"
+            variant="contained"
+            endIcon={<LaunchIcon />}
+            component="a"
+          >
+            Apply Now
+          </Button>
+        </Link>
         <Button
           size="small"
           variant="contained"
