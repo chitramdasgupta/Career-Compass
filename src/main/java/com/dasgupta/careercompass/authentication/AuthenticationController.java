@@ -1,8 +1,7 @@
 package com.dasgupta.careercompass.authentication;
 
-import com.dasgupta.careercompass.user.LoginUserDto;
-import com.dasgupta.careercompass.user.RegisterUserDto;
 import com.dasgupta.careercompass.user.User;
+import com.dasgupta.careercompass.user.UserAuthDto;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -28,18 +27,18 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) {
-        User registeredUser = authenticationService.register(registerUserDto);
+    public ResponseEntity<User> register(@RequestBody UserAuthDto userAuthDto) {
+        User registeredUser = authenticationService.register(userAuthDto);
         return ResponseEntity.ok(registeredUser);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> authenticate(@RequestBody LoginUserDto loginUserDto) {
-        User authenticatedUser = authenticationService.authenticate(loginUserDto);
+    public ResponseEntity<String> authenticate(@RequestBody UserAuthDto userAuthDto) {
+        User authenticatedUser = authenticationService.authenticate(userAuthDto);
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
         boolean isSecure = Arrays.asList(env.getActiveProfiles()).contains("prod");
-        
+
         ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwtToken)
                 .httpOnly(true)
                 .secure(isSecure)

@@ -21,8 +21,8 @@ public class QuestionnaireQuestion {
     @JoinColumn(name = "questionnaire_id", nullable = false)
     private Questionnaire questionnaire;
 
-    @ManyToOne
-    @JoinColumn(name = "question_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "question_id")
     private Question question;
 
     private Integer displayOrder;

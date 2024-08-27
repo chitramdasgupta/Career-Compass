@@ -20,6 +20,5 @@ public class JobDto {
     private BigDecimal minimumSalary;
     private BigDecimal maximumSalary;
     private String currency;
-    private Long questionnaireId;
     private CompanyDto company;
 }

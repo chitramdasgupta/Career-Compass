@@ -1,8 +1,6 @@
 package com.dasgupta.careercompass.jobApplication;
 
-import com.dasgupta.careercompass.job.JobDto;
 import com.dasgupta.careercompass.user.User;
-import com.dasgupta.careercompass.user.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,27 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("job-applications/")
 public class JobApplicationController {
     private final JobApplicationService jobApplicationService;
+    private final JobApplicationMapper jobApplicationMapper;
 
     @Autowired
-    public JobApplicationController(JobApplicationService jobApplicationService) {
+    public JobApplicationController(JobApplicationService jobApplicationService, JobApplicationMapper jobApplicationMapper) {
         this.jobApplicationService = jobApplicationService;
-    }
-
-    private static JobApplicationDto getJobApplicationDto(JobApplication jobApplication, User user) {
-        JobApplicationDto responseDto = new JobApplicationDto();
-        responseDto.setId(jobApplication.getId());
-
-        JobDto JobDto = new JobDto();
-        JobDto.setId(jobApplication.getJob().getId());
-        JobDto.setTitle(jobApplication.getJob().getTitle());
-        JobDto.setDescription(jobApplication.getJob().getDescription());
-        responseDto.setJob(JobDto);
-
-        UserDto userResponseDto = new UserDto();
-        userResponseDto.setId(user.getId());
-        userResponseDto.setEmail(user.getEmail());
-        responseDto.setUser(userResponseDto);
-        return responseDto;
+        this.jobApplicationMapper = jobApplicationMapper;
     }
 
     @PostMapping("create")
@@ -48,12 +31,11 @@ public class JobApplicationController {
 
             JobApplication jobApplication = jobApplicationService.createJobApplication(submissionDTO, user);
 
-            JobApplicationDto responseDto = getJobApplicationDto(jobApplication, user);
+            JobApplicationDto responseDto = jobApplicationMapper.toDto(jobApplication);
 
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
 }
