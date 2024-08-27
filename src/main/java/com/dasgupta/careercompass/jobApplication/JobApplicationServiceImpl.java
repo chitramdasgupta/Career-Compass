@@ -33,18 +33,18 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
     @Override
     public JobApplication createJobApplication(JobApplicationSubmissionDto submissionDTO, User user) {
-        log.debug("Creating job application for user: {}, job ID: {}", user.getId(), submissionDTO.getJobId());
+        log.info("Creating job application for user: {}, job ID: {}", user.getId(), submissionDTO.getJobId());
 
         Job job = jobRepository.findById(submissionDTO.getJobId())
                 .orElseThrow(() -> new RuntimeException("Job not found"));
-        log.debug("Job found: {}", job.getId());
+        log.info("Job found: {}", job.getId());
 
         JobApplication jobApplication = new JobApplication();
         jobApplication.setJob(job);
         jobApplication.setUser(user);
 
         jobApplication = jobApplicationRepository.save(jobApplication);
-        log.debug("Job application saved with ID: {}", jobApplication.getId());
+        log.info("Job application saved with ID: {}", jobApplication.getId());
 
         if (submissionDTO.getResponses() == null || submissionDTO.getResponses().isEmpty()) {
             throw new RuntimeException("No responses provided for the questionnaire");
