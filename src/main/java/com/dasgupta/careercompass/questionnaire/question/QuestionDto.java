@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.questionnaire;
+package com.dasgupta.careercompass.questionnaire.question;
 
 import lombok.Getter;
 import lombok.Setter;

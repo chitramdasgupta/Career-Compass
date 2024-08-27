@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.questionnaire;
+package com.dasgupta.careercompass.questionnaire.question;
 
 public enum QuestionType {
     TEXT("TEXT"),

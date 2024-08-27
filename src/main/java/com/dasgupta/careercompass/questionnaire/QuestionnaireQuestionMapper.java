@@ -1,5 +1,6 @@
 package com.dasgupta.careercompass.questionnaire;
 
+import com.dasgupta.careercompass.questionnaire.question.QuestionMapper;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring", uses = {QuestionMapper.class})
