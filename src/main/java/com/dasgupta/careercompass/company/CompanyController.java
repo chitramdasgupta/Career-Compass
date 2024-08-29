@@ -1,18 +1,25 @@
 package com.dasgupta.careercompass.company;
 
 import com.dasgupta.careercompass.constants.Constants;
+import com.dasgupta.careercompass.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("companies")
 public class CompanyController {
+    private static final Logger log = LoggerFactory.getLogger(CompanyController.class);
     private final CompanyService companyService;
 
     @Autowired
@@ -21,15 +28,31 @@ public class CompanyController {
     }
 
     @GetMapping("")
-    public Page<Company> getAllCompanies(@RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_NUMBER) int page, @RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_SIZE) int size) {
+    public Page<CompanyDto> getAllCompanies(@RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_NUMBER) int page, @RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_SIZE) int size) {
+        log.info("getAllCompanies called with page={}, size={}", page, size);
         Pageable pageable = PageRequest.of(page, size);
         return companyService.getAllCompanies(pageable);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Company> getCompanyById(@PathVariable int id) {
-        Optional<Company> company = companyService.getCompanyById(id);
+    public ResponseEntity<CompanyDto> getCompanyById(@PathVariable int id) {
+        Optional<CompanyDto> company = companyService.getCompanyById(id);
 
         return company.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/{id}/reviews")
+    public ResponseEntity<CompanyReviewDto> createReview(@PathVariable int id, @RequestBody ReviewDto reviewDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        Optional<CompanyReviewDto> resultReviewDto = companyService.createReview(id, reviewDto.getRating(), user);
+        return resultReviewDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/average-rating")
+    public ResponseEntity<Map<String, Double>> getAverageRating(@PathVariable int id) {
+        Double averageRating = companyService.getAverageRatingForCompany(id);
+        return ResponseEntity.ok(Map.of("data", averageRating));
     }
 }

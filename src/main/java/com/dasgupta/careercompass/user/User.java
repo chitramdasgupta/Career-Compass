@@ -1,5 +1,6 @@
 package com.dasgupta.careercompass.user;
 
+import com.dasgupta.careercompass.company.CompanyReview;
 import com.dasgupta.careercompass.jobApplication.JobApplication;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -35,6 +36,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     private Set<JobApplication> jobApplications;
+
+    @OneToMany(mappedBy = "user")
+    List<CompanyReview> reviews;
 
     // Returns the user's roles
     @Override
