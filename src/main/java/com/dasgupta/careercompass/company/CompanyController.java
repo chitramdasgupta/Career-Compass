@@ -13,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -48,11 +47,5 @@ public class CompanyController {
 
         Optional<CompanyReviewDto> resultReviewDto = companyService.createReview(id, reviewDto.getRating(), user);
         return resultReviewDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/{id}/average-rating")
-    public ResponseEntity<Map<String, Double>> getAverageRating(@PathVariable int id) {
-        Double averageRating = companyService.getAverageRatingForCompany(id);
-        return ResponseEntity.ok(Map.of("data", averageRating));
     }
 }

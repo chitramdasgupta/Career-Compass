@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class CompanyReviewDto {
     Integer id;
-    CompanyDto company;
+    Integer companyId;
     UserDto user;
     Integer rating;
 }

@@ -12,4 +12,5 @@ public class CompanyDto {
     private String name;
     private String description;
     private List<CompanyReviewDto> reviews;
+    private Double averageRating;
 }

@@ -1,14 +1,16 @@
 package com.dasgupta.careercompass.job;
 
 import com.dasgupta.careercompass.company.CompanyMapper;
-import org.mapstruct.InheritInverseConfiguration;
+import com.dasgupta.careercompass.questionnaire.QuestionnaireMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {CompanyMapper.class})
+@Mapper(componentModel = "spring", uses = {CompanyMapper.class, QuestionnaireMapper.class})
 public interface JobMapper {
-
+    @Mapping(target = "company", source = "company")
+    @Mapping(target = "questionnaire", source = "questionnaire")
     JobDto toDto(Job job);
 
-    @InheritInverseConfiguration
+    @Mapping(target = "jobApplications", ignore = true)
     Job toEntity(JobDto jobDto);
 }

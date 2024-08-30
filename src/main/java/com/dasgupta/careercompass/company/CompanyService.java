@@ -12,6 +12,4 @@ public interface CompanyService {
     Optional<CompanyDto> getCompanyById(Integer id);
 
     Optional<CompanyReviewDto> createReview(Integer companyId, Integer rating, User user);
-
-    Double getAverageRatingForCompany(Integer companyId);
 }

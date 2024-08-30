@@ -1,6 +1,5 @@
 package com.dasgupta.careercompass.company;
 
-import com.dasgupta.careercompass.exceptions.ResourceNotFoundException;
 import com.dasgupta.careercompass.user.User;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -36,15 +35,25 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Optional<CompanyDto> getCompanyById(Integer id) {
-        Optional<Company> company = companyRepository.findById(id);
-        return company.map(companyMapper::toDto);
+        try {
+            Company company = companyRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Company not found with id %d".formatted(id)));
+            log.info("Company found with id={}", id);
+
+            CompanyDto companyDto = companyMapper.toDto(company);
+
+            return Optional.of(companyDto);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Optional.empty();
+        }
     }
 
     @Override
     public Optional<CompanyReviewDto> createReview(Integer companyId, Integer rating, User user) {
         try {
             Company company = companyRepository.findById(companyId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Company not found with id: %d".formatted(companyId)));
+                    .orElseThrow(() -> new RuntimeException("Company not found with id: %d".formatted(companyId)));
 
             CompanyReview review = new CompanyReview().
                     setCompany(company).
@@ -58,10 +67,5 @@ public class CompanyServiceImpl implements CompanyService {
             log.info("Could not create review: {}", e.getMessage());
             return Optional.empty();
         }
-    }
-
-    @Override
-    public Double getAverageRatingForCompany(Integer companyId) {
-        return companyReviewRepository.getAverageRatingForCompany(companyId);
     }
 }

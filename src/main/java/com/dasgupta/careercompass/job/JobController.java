@@ -28,14 +28,16 @@ public class JobController {
         log.info("getAllJobs called with page={}, size={}", page, size);
         Pageable pageable = PageRequest.of(page, size);
         Page<JobDto> jobs = jobService.getAllJobs(pageable);
-        log.info("The jobs are: {}", jobs); // This does not log anything!
+        log.info("The jobs are: {}", jobs);
 
         return jobs;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<JobDto> getJobById(@PathVariable int id) {
+        log.info("getJobById called with id={}", id);
         Optional<JobDto> jobDto = jobService.getJobById(id);
+        log.info("jobDto={}", jobDto);
 
         return jobDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }

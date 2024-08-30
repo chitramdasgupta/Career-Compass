@@ -1,6 +1,7 @@
 package com.dasgupta.careercompass.job;
 
 import com.dasgupta.careercompass.company.CompanyDto;
+import com.dasgupta.careercompass.questionnaire.QuestionnaireDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,11 +15,12 @@ public class JobDto {
     private String description;
     private String minimumRequirement;
     private String desiredRequirement;
+    private CompanyDto company;
     private String city;
     private String country;
     private String jobLocation;
     private BigDecimal minimumSalary;
     private BigDecimal maximumSalary;
     private String currency;
-    private CompanyDto company;
+    private QuestionnaireDto questionnaire;
 }
