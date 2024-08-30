@@ -1,5 +1,7 @@
 package com.dasgupta.careercompass.questionnaire;
 
+import com.dasgupta.careercompass.questionnaire.questionnairequestion.QuestionnaireQuestionDto;
+import com.dasgupta.careercompass.questionnaire.questionnairequestion.QuestionnaireQuestionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

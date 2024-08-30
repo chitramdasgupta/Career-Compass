@@ -1,6 +1,6 @@
 package com.dasgupta.careercompass.questionnaire.question;
 
-import com.dasgupta.careercompass.questionnaire.QuestionnaireQuestion;
+import com.dasgupta.careercompass.questionnaire.questionnairequestion.QuestionnaireQuestion;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

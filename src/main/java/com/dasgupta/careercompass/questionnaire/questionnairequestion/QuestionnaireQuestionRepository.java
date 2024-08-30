@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.questionnaire;
+package com.dasgupta.careercompass.questionnaire.questionnairequestion;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
