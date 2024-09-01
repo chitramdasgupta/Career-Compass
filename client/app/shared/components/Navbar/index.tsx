@@ -7,7 +7,7 @@ import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 
 export default function Navbar() {
-  const NAVBAR_HEIGHT = "2rem";
+  const NAVBAR_HEIGHT = "3rem";
   const NAVBAR_ITEMS = ["Posts", "Jobs", "Companies"];
 
   const [isMenuOpen, setIsMenuOpen]: [

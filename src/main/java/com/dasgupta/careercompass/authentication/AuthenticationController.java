@@ -1,7 +1,8 @@
 package com.dasgupta.careercompass.authentication;
 
 import com.dasgupta.careercompass.user.User;
-import com.dasgupta.careercompass.user.UserAuthDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -16,38 +17,57 @@ import java.util.Arrays;
 @RequestMapping("/auth")
 @RestController
 public class AuthenticationController {
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationController.class);
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
     private final Environment env;
+    private final AuthResponseUserMapper authResponseUserMapper;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, Environment env) {
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, Environment env,
+                                    AuthResponseUserMapper authResponseUserMapper) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
         this.env = env;
+        this.authResponseUserMapper = authResponseUserMapper;
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody UserAuthDto userAuthDto) {
-        User registeredUser = authenticationService.register(userAuthDto);
-        return ResponseEntity.ok(registeredUser);
+    public ResponseEntity<AuthResponseUserDto> register(@RequestBody AuthRequestUserDto authRequestUserDto) {
+        log.info("Register endpoint hit with for user with email: {}", authRequestUserDto.getEmail());
+        AuthResponseUserDto registeredUserDto = authenticationService.register(authRequestUserDto);
+
+        log.info("User is registered: {}", registeredUserDto.getEmail());
+
+        return ResponseEntity.ok(registeredUserDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> authenticate(@RequestBody UserAuthDto userAuthDto) {
-        User authenticatedUser = authenticationService.authenticate(userAuthDto);
+    public ResponseEntity<AuthResponseUserDto> authenticate(@RequestBody AuthRequestUserDto authRequestUserDto) {
+        log.info("Login endpoint called with user email: {}", authRequestUserDto.getEmail());
+
+        User authenticatedUser = authenticationService.authenticate(authRequestUserDto);
+        log.info("User is authenticated: {}", authenticatedUser.getEmail());
+
+        ResponseCookie jwtCookie = getJwtCookie(authenticatedUser);
+        log.info("Response Cookie with JWT is generated");
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .body(authResponseUserMapper.toDto(authenticatedUser));
+    }
+
+    private ResponseCookie getJwtCookie(User authenticatedUser) {
         String jwtToken = jwtService.generateToken(authenticatedUser);
+        log.info("JWT token is generated");
 
         boolean isSecure = Arrays.asList(env.getActiveProfiles()).contains("prod");
+        log.info("isSecure: {}", isSecure);
 
-        ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwtToken)
+        return ResponseCookie.from("jwt", jwtToken)
                 .httpOnly(true)
                 .secure(isSecure)
                 .path("/")
                 .maxAge(jwtService.getExpirationTime())
                 .build();
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body("Login successful");
     }
 }

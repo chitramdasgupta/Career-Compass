@@ -3,11 +3,14 @@ package com.dasgupta.careercompass.user;
 import com.dasgupta.careercompass.company.CompanyReview;
 import com.dasgupta.careercompass.jobApplication.JobApplication;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -38,7 +41,19 @@ public class User implements UserDetails {
     private Set<JobApplication> jobApplications;
 
     @OneToMany(mappedBy = "user")
+    @ToString.Exclude
     List<CompanyReview> reviews;
+
+    private String firstName;
+
+    private String middleName;
+
+    private String lastName;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
+    @Column(nullable = false)
 
     // Returns the user's roles
     @Override

@@ -1,11 +1,11 @@
-package com.dasgupta.careercompass.user;
+package com.dasgupta.careercompass.authentication;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UserAuthDto {
+public class AuthRequestUserDto {
     String email;
     String password;
 }

@@ -1,7 +1,6 @@
 package com.dasgupta.careercompass.authentication;
 
 import com.dasgupta.careercompass.user.User;
-import com.dasgupta.careercompass.user.UserAuthDto;
 import com.dasgupta.careercompass.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,26 +16,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
+    private final AuthResponseUserMapper authResponseUserMapper;
 
     public AuthenticationServiceImpl(
             UserRepository userRepository,
             AuthenticationManager authenticationManager,
-            PasswordEncoder passwordEncoder
-    ) {
+            PasswordEncoder passwordEncoder,
+            AuthResponseUserMapper authResponseUserMapper) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authResponseUserMapper = authResponseUserMapper;
     }
 
-    public User register(UserAuthDto input) {
+    public AuthResponseUserDto register(AuthRequestUserDto input) {
         User user = new User()
                 .setEmail(input.getEmail())
                 .setPassword(passwordEncoder.encode(input.getPassword()));
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        return authResponseUserMapper.toDto(savedUser);
     }
 
-    public User authenticate(UserAuthDto input) {
+    public User authenticate(AuthRequestUserDto input) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         input.getEmail(),
