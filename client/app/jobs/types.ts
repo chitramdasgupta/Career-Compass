@@ -14,4 +14,5 @@ export interface Job {
   currency: string | null;
   questionnaireId: number;
   company: Company;
+  bookmarked: boolean;
 }

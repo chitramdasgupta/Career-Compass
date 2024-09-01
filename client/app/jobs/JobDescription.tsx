@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Job } from "@/app/jobs/types";
 import { SkeletonList } from "../posts/components/PostSkeleton/skeletonList";
 import Button from "@mui/material/Button";
@@ -6,15 +6,40 @@ import LaunchIcon from "@mui/icons-material/Launch";
 import { Card, CardActions, CardContent, CardHeader } from "@mui/material";
 import Link from "next/link";
 import { BookmarkAddOutlined } from "@mui/icons-material";
+import { addBookmark, removeBookmark } from "./bookmarkApi";
 
 interface JobDescriptionProps {
   job: Job | null;
 }
 
 export const JobDescription: React.FC<JobDescriptionProps> = ({ job }) => {
+  const [isBookmarked, setIsBookmarked] = useState(job?.bookmarked || false);
+
+  useEffect(() => {
+    if (job) {
+      setIsBookmarked(job.bookmarked);
+    }
+  }, [job]);
+
   if (job == null) {
     return <SkeletonList count={1} />;
   }
+
+  const handleBookmarkToggle = async () => {
+    const jobId = job.id;
+
+    try {
+      if (isBookmarked) {
+        await removeBookmark(jobId);
+      } else {
+        await addBookmark(jobId);
+      }
+
+      setIsBookmarked(!isBookmarked);
+    } catch (error) {
+      console.error("Error toggling bookmark:", error);
+    }
+  };
 
   return (
     <Card className="sticky top-2">
@@ -44,10 +69,11 @@ export const JobDescription: React.FC<JobDescriptionProps> = ({ job }) => {
         <Button
           size="small"
           variant="contained"
-          color="secondary"
+          color={isBookmarked ? "warning" : "secondary"}
           endIcon={<BookmarkAddOutlined />}
+          onClick={handleBookmarkToggle}
         >
-          Bookmark
+          {isBookmarked ? "Bookmarked" : "Bookmark"}
         </Button>
       </CardActions>
       <CardContent>
