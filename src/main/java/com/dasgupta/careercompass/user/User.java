@@ -1,5 +1,6 @@
 package com.dasgupta.careercompass.user;
 
+import com.dasgupta.careercompass.bookmark.Bookmark;
 import com.dasgupta.careercompass.company.CompanyReview;
 import com.dasgupta.careercompass.jobApplication.JobApplication;
 import jakarta.persistence.*;
@@ -54,6 +55,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)
     @Column(nullable = false)
+
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    private Set<Bookmark> bookmarks;
 
     // Returns the user's roles
     @Override

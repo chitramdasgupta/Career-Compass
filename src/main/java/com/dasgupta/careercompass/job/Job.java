@@ -1,5 +1,6 @@
 package com.dasgupta.careercompass.job;
 
+import com.dasgupta.careercompass.bookmark.Bookmark;
 import com.dasgupta.careercompass.company.Company;
 import com.dasgupta.careercompass.jobApplication.JobApplication;
 import com.dasgupta.careercompass.questionnaire.Questionnaire;
@@ -76,6 +77,10 @@ public class Job {
 
     @OneToOne(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private Questionnaire questionnaire;
+
+    @OneToMany(mappedBy = "job")
+    @ToString.Exclude
+    private Set<Bookmark> bookmarks;
 
     // Boilerplate
 

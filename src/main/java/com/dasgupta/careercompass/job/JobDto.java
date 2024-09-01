@@ -23,4 +23,5 @@ public class JobDto {
     private BigDecimal maximumSalary;
     private String currency;
     private QuestionnaireDto questionnaire;
+    private boolean isBookmarked;
 }

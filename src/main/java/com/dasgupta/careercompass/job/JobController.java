@@ -1,6 +1,7 @@
 package com.dasgupta.careercompass.job;
 
 import com.dasgupta.careercompass.constants.Constants;
+import com.dasgupta.careercompass.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -27,7 +30,11 @@ public class JobController {
     public Page<JobDto> getAllJobs(@RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_NUMBER) int page, @RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_SIZE) int size) {
         log.info("getAllJobs called with page={}, size={}", page, size);
         Pageable pageable = PageRequest.of(page, size);
-        Page<JobDto> jobs = jobService.getAllJobs(pageable);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        Page<JobDto> jobs = jobService.getAllJobs(pageable, user.getId());
         log.info("The jobs are: {}", jobs);
 
         return jobs;
@@ -36,7 +43,11 @@ public class JobController {
     @GetMapping("/{id}")
     public ResponseEntity<JobDto> getJobById(@PathVariable int id) {
         log.info("getJobById called with id={}", id);
-        Optional<JobDto> jobDto = jobService.getJobById(id);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        Optional<JobDto> jobDto = jobService.getJobById(id, user.getId());
         log.info("jobDto={}", jobDto);
 
         return jobDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
