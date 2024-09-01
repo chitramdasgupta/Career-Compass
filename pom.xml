@@ -160,7 +160,6 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>${lombok-mapstruct-binding.version}</version>
-                            <optional>true</optional>
                         </path>
                     </annotationProcessorPaths>
                     <compilerArgs>
