@@ -21,11 +21,13 @@ const QuestionnairePage = () => {
   useEffect(() => {
     if (jobId) {
       fetchJob(jobId)
-        .then((job) => fetchQuestions(job.questionnaireId))
+        .then((job) => fetchQuestions(job.questionnaire.id))
         .then((questions) => {
-          const sortedQuestions = questions.sort(
-            (a, b) => a.displayOrder - b.displayOrder,
-          );
+          console.log(questions);
+          const sortedQuestions = questions;
+          // const sortedQuestions = questions.sort(
+          //   (a, b) => a.displayOrder - b.displayOrder,
+          // );
           setQuestions(sortedQuestions);
           setLoading(false);
         })

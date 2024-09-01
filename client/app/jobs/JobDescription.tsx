@@ -23,7 +23,12 @@ export const JobDescription: React.FC<JobDescriptionProps> = ({ job }) => {
         subheader={
           <Link href={`companies/${job.company.id}`}>{job.company.name}</Link>
         }
-        sx={{ paddingBottom: "8px" }}
+        sx={{
+          paddingBottom: "8px",
+          "& .MuiCardHeader-subheader:hover": {
+            textDecoration: "underline",
+          },
+        }}
       />
       <CardActions sx={{ padding: "0 16px 16px 16px" }}>
         <Link href={`/jobs/${job.id}/questionnaire`} passHref>

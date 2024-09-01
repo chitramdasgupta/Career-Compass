@@ -45,7 +45,7 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
           key={question.id}
           {...register(`responses.${question.id}` as const)}
           fullWidth
-          label={question.text}
+          label={question.question.text}
           error={!!errors.responses?.[question.id]}
           helperText={errors.responses?.[question.id]?.message}
           margin="normal"

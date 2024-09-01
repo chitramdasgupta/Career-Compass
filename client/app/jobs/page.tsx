@@ -23,6 +23,7 @@ export default function Jobs() {
 
     fetchJobs(pageNumber)
       .then((response: PaginatedResponse<Job>) => {
+        console.log({ response });
         setLoading(false);
         setJobs((jobs) => [...jobs, ...response.content]);
         if (selectedJob == null) setSelectedJob(response.content[0]);
