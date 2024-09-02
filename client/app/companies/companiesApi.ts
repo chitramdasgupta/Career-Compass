@@ -4,9 +4,9 @@ import axiosInstance from "../shared/utils/axios";
 
 const COMPANIES_URL = "http://localhost:8080/companies";
 
-export async function fetchCompanies(): Promise<Company[]> {
+export async function fetchCompanies(page: number = 1, size: number = 25): Promise<Company[]> {
   try {
-    const response = await axiosInstance.get<Company[]>(COMPANIES_URL);
+    const response = await axiosInstance.get<Company[]>(`${COMPANIES_URL}?page=${page}&size=${size}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching companies:", error);
