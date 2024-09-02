@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.exceptions;
+package com.dasgupta.careercompass.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.exceptions;
+package com.dasgupta.careercompass.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
