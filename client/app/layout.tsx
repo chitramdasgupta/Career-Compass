@@ -3,6 +3,8 @@ import "./globals.css";
 import React from "react";
 import Navbar from "./shared/components/Navbar";
 import { Metadata } from "next";
+import AppNavbar from "./shared/components/AppNavbar";
+import { Container } from "@mui/material";
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -22,8 +24,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={roboto.className}>
-        <Navbar />
-        <main className="lg:container lg:mx-auto px-1">{children}</main>
+        <AppNavbar />
+        <Container maxWidth="xl">{children}</Container>
       </body>
     </html>
   );
