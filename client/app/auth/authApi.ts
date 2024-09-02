@@ -21,3 +21,12 @@ export async function loginUser(loginUserDto: LoginUserDto): Promise<LoginRespon
     throw error;
   }
 }
+
+export async function logoutUser(): Promise<void> {
+  try {
+    await axiosInstance.post(`${AUTH_URL}/logout`);
+  } catch (error) {
+    console.error("Error logging out user:", error);
+    throw error;
+  }
+}

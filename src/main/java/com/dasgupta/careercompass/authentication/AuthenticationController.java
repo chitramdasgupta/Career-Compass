@@ -56,6 +56,24 @@ public class AuthenticationController {
                 .body(authResponseUserMapper.toDto(authenticatedUser));
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        log.info("Logout endpoint called");
+
+        ResponseCookie jwtCookie = ResponseCookie.from("jwt", "")
+                .httpOnly(true)
+                .secure(Arrays.asList(env.getActiveProfiles()).contains("prod"))
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        log.info("JWT cookie cleared");
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .build();
+    }
+
     private ResponseCookie getJwtCookie(User authenticatedUser) {
         String jwtToken = jwtService.generateToken(authenticatedUser);
         log.info("JWT token is generated");

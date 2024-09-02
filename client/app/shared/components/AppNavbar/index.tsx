@@ -13,15 +13,16 @@ import Link from "next/link";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import Button from "@mui/material/Button";
 import { Container } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { logoutUser } from "@/app/auth/authApi";
 
 const pages = ["Jobs", "Companies"];
-const profileLinks = ["Profile", "Log out"];
 
 function AppNavbar() {
+  const router = useRouter();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
-
   const [anchorElMenu, setAnchorElMenu] = React.useState<null | HTMLElement>(
     null,
   );
@@ -40,6 +41,14 @@ function AppNavbar() {
 
   const handleMenuClose = () => {
     setAnchorElMenu(null);
+  };
+
+  const handleLogout = async () => {
+    await logoutUser();
+
+    handleUserMenuClose();
+
+    router.push("/auth/login");
   };
 
   return (
@@ -129,11 +138,10 @@ function AppNavbar() {
               open={Boolean(anchorElUser)}
               onClose={handleUserMenuClose}
             >
-              {profileLinks.map((link) => (
-                <MenuItem key={link} onClick={handleUserMenuClose}>
-                  <Link href={`/${link.toLowerCase()}`}>{link}</Link>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={handleUserMenuClose}>
+                <Link href="/profile">Profile</Link>
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>Log out</MenuItem>
             </Menu>
           </Box>
         </Toolbar>
