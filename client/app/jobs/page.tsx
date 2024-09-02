@@ -50,7 +50,7 @@ export default function Jobs() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Jobs</h1>
       <div className="md:flex md:gap-4">
-        <div className="md:w-1/2" style={{ height: "90vh" }}>
+        <div className="md:w-1/2" style={{ height: "85vh" }}>
           {loading ? (
             <SkeletonList count={6} />
           ) : (
