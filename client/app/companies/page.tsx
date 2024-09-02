@@ -3,7 +3,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Company } from "./types";
 import { fetchCompanies } from "./companiesApi";
-import { PaginatedResponse } from "../shared/types/paginatedResponseType";
 import { Virtuoso } from "react-virtuoso";
 import { SkeletonList } from "../posts/components/PostSkeleton/skeletonList";
 import CompanyItem from "./components/CompanyItem";
