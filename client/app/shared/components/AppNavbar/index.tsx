@@ -141,6 +141,9 @@ function AppNavbar() {
               <MenuItem onClick={handleUserMenuClose}>
                 <Link href="/profile">Profile</Link>
               </MenuItem>
+              <MenuItem onClick={handleUserMenuClose}>
+                <Link href="/dashboard">Dashboard</Link>
+              </MenuItem>
               <MenuItem onClick={handleLogout}>Log out</MenuItem>
             </Menu>
           </Box>
