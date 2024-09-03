@@ -1,4 +1,3 @@
-import axios from "axios";
 import { Company } from "./types";
 import axiosInstance from "../shared/utils/axios";
 
