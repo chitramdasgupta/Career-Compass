@@ -1,5 +1,6 @@
 package com.dasgupta.careercompass.authentication;
 
+import com.dasgupta.careercompass.user.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,4 +9,5 @@ import lombok.Setter;
 public class AuthRequestUserDto {
     String email;
     String password;
+    Role role;
 }

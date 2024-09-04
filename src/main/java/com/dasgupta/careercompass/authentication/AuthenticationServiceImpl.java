@@ -32,7 +32,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthResponseUserDto register(AuthRequestUserDto input) {
         User user = new User()
                 .setEmail(input.getEmail())
-                .setPassword(passwordEncoder.encode(input.getPassword()));
+                .setPassword(passwordEncoder.encode(input.getPassword()))
+                .setRole(input.getRole());
 
         User savedUser = userRepository.save(user);
 

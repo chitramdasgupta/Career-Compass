@@ -1,5 +1,6 @@
 package com.dasgupta.careercompass.authentication;
 
+import com.dasgupta.careercompass.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -31,8 +32,12 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(User userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("role", userDetails.getRole().name());
+
+        return generateToken(claims, userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {

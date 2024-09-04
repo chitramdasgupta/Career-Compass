@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -31,11 +34,20 @@ public class UserController {
         String email = user.getEmail();
         Optional<UserDto> userProfile = userService.getUserByEmail(email);
         if (userProfile.isPresent()) {
-            log.info("User found: {}", userProfile.get().getRole());
+            log.info("User found: {}", userProfile.get().getEmail());
         } else {
             log.info("User not found: {}", email);
         }
 
         return ResponseEntity.ok(userProfile.orElseThrow());
+    }
+
+    @GetMapping("/roles")
+    public ResponseEntity<List<String>> getAllRoles() {
+        List<String> roles = Arrays.stream(Role.values())
+                .map(Role::name)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(roles);
     }
 }
