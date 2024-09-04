@@ -1,5 +1,7 @@
 package com.dasgupta.careercompass.user;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -13,7 +15,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
     @Autowired
@@ -28,6 +30,11 @@ public class UserController {
 
         String email = user.getEmail();
         Optional<UserDto> userProfile = userService.getUserByEmail(email);
+        if (userProfile.isPresent()) {
+            log.info("User found: {}", userProfile.get().getRole());
+        } else {
+            log.info("User not found: {}", email);
+        }
 
         return ResponseEntity.ok(userProfile.orElseThrow());
     }

@@ -13,4 +13,5 @@ public class UserDto {
     private String lastName;
     private QualificationDegree degree;
     private String department;
+    private Role role;
 }
