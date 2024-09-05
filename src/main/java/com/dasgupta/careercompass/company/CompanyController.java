@@ -30,14 +30,22 @@ public class CompanyController {
     public Page<CompanyDto> getAllCompanies(@RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_NUMBER) int page, @RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_SIZE) int size) {
         log.info("getAllCompanies called with page={}, size={}", page, size);
         Pageable pageable = PageRequest.of(page, size);
+
         return companyService.getAllCompanies(pageable);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CompanyDto> getCompanyById(@PathVariable int id) {
+        log.info("Fetching company with id: {}", id);
         Optional<CompanyDto> company = companyService.getCompanyById(id);
 
-        return company.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if (company.isPresent()) {
+            log.info("Company found: {}", company.get());
+            return ResponseEntity.ok(company.get());
+        } else {
+            log.warn("Company not found with id: {}", id);
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/{id}/reviews")

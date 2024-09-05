@@ -1,5 +1,6 @@
 package com.dasgupta.careercompass.company;
 
+import com.dasgupta.careercompass.user.UserDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.util.List;
 @Setter
 public class CompanyDto {
     private Integer id;
+    private UserDto user;
     private String name;
     private String description;
     private List<CompanyReviewDto> reviews;

@@ -6,6 +6,8 @@ import com.dasgupta.careercompass.questionnaire.answer.Answer;
 import com.dasgupta.careercompass.questionnaire.answer.AnswerRepository;
 import com.dasgupta.careercompass.questionnaire.question.Question;
 import com.dasgupta.careercompass.questionnaire.question.QuestionRepository;
+import com.dasgupta.careercompass.user.Candidate;
+import com.dasgupta.careercompass.user.CandidateRepository;
 import com.dasgupta.careercompass.user.User;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -22,13 +24,19 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private final JobRepository jobRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
+    private final CandidateRepository candidateRepository;
 
     @Autowired
-    public JobApplicationServiceImpl(JobApplicationRepository jobApplicationRepository, JobRepository jobRepository, QuestionRepository questionRepository, AnswerRepository answerRepository) {
+    public JobApplicationServiceImpl(JobApplicationRepository jobApplicationRepository,
+                                     JobRepository jobRepository,
+                                     QuestionRepository questionRepository,
+                                     AnswerRepository answerRepository,
+                                     CandidateRepository candidateRepository) {
         this.jobApplicationRepository = jobApplicationRepository;
         this.jobRepository = jobRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
+        this.candidateRepository = candidateRepository;
     }
 
     @Override
@@ -39,9 +47,13 @@ public class JobApplicationServiceImpl implements JobApplicationService {
                 .orElseThrow(() -> new RuntimeException("Job not found"));
         log.info("Job found: {}", job.getId());
 
+        Candidate candidate = candidateRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new RuntimeException("Candidate not found for user"));
+        log.info("Candidate found: {}", candidate.getId());
+
         JobApplication jobApplication = new JobApplication();
         jobApplication.setJob(job);
-        jobApplication.setUser(user);
+        jobApplication.setCandidate(candidate);
 
         jobApplication = jobApplicationRepository.save(jobApplication);
         log.info("Job application saved with ID: {}", jobApplication.getId());
@@ -59,12 +71,11 @@ public class JobApplicationServiceImpl implements JobApplicationService {
             ans.setQuestion(question);
             ans.setJobApplication(finalJobApplication);
             ans.setResponse(answerResponse);
-            ans.setUser(user);
+            ans.setCandidate(candidate);
 
             answerRepository.save(ans);
         });
 
         return jobApplication;
     }
-
 }

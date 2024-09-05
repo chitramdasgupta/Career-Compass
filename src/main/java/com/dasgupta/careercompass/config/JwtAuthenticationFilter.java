@@ -45,6 +45,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+        if (SecurityConstants.EXCLUDED_PATHS.contains(request.getRequestURI())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
         log.info("JwtAuthenticationFilter triggered for URI: {}", request.getRequestURI());
         final String jwt = extractJwtFromCookie(request);
 

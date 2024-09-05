@@ -1,5 +1,6 @@
 package com.dasgupta.careercompass.user;
 
+import com.dasgupta.careercompass.company.CompanyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,26 +21,38 @@ import java.util.stream.Collectors;
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+    private final CandidateService candidateService;
+    private final CompanyService companyService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, CandidateService candidateService, CompanyService companyService) {
         this.userService = userService;
+        this.candidateService = candidateService;
+        this.companyService = companyService;
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserDto> getCurrentUser() {
+    public ResponseEntity<?> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        String email = user.getEmail();
-        Optional<UserDto> userProfile = userService.getUserByEmail(email);
-        if (userProfile.isPresent()) {
-            log.info("User found: {}", userProfile.get().getEmail());
-        } else {
-            log.info("User not found: {}", email);
-        }
+        Optional<UserDto> userDto = userService.getUserByEmail(user.getEmail());
+        if (userDto.isPresent()) {
+            log.info("User found: {}", userDto.get().getEmail());
 
-        return ResponseEntity.ok(userProfile.orElseThrow());
+            return switch (userDto.get().getRole()) {
+                case Role.ROLE_CANDIDATE ->
+                        ResponseEntity.ok(candidateService.getCandidateByUserId(userDto.get().getId())
+                                .orElseThrow(() -> new RuntimeException("Candidate not found")));
+                case Role.ROLE_COMPANY -> ResponseEntity.ok(companyService.getCompanyById(userDto.get().getId())
+                        .orElseThrow(() -> new RuntimeException("Company not found")));
+                default -> ResponseEntity.ok(userDto.get());
+            };
+        } else {
+            log.info("User not found: {}", user.getEmail());
+            
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/roles")

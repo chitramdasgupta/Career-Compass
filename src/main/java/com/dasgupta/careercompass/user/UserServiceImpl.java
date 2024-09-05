@@ -18,12 +18,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDto> getUserByEmail(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent()) {
-            UserDto userDto = userMapper.toDto(user.get());
-            return Optional.of(userDto);
-        } else {
-            return Optional.empty();
-        }
+        return userRepository.findByEmail(email).map(userMapper::toDto);
     }
 }

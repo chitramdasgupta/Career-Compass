@@ -2,7 +2,7 @@ package com.dasgupta.careercompass.questionnaire.answer;
 
 import com.dasgupta.careercompass.jobApplication.JobApplication;
 import com.dasgupta.careercompass.questionnaire.question.Question;
-import com.dasgupta.careercompass.user.User;
+import com.dasgupta.careercompass.user.Candidate;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class Answer {
     private Long id;
 
     @OneToOne(optional = false)
-    private User user;
+    private Candidate candidate;
 
     @OneToOne(optional = false)
     private JobApplication jobApplication;

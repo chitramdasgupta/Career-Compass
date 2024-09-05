@@ -9,8 +9,10 @@ import org.mapstruct.Mapping;
 public interface JobMapper {
     @Mapping(target = "company", source = "company")
     @Mapping(target = "questionnaire", source = "questionnaire")
+    @Mapping(target = "bookmarked", ignore = true)
     JobDto toDto(Job job);
 
     @Mapping(target = "jobApplications", ignore = true)
+    @Mapping(target = "bookmarks", ignore = true)
     Job toEntity(JobDto jobDto);
 }

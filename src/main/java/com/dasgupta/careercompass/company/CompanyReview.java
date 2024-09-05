@@ -1,6 +1,6 @@
 package com.dasgupta.careercompass.company;
 
-import com.dasgupta.careercompass.user.User;
+import com.dasgupta.careercompass.user.Candidate;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -25,8 +25,8 @@ public class CompanyReview {
     private Company company;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "candidate_id")
+    private Candidate candidate;
 
     @NotNull
     @Column(nullable = false)

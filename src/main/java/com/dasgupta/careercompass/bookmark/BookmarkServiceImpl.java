@@ -4,8 +4,8 @@ import com.dasgupta.careercompass.job.Job;
 import com.dasgupta.careercompass.job.JobDto;
 import com.dasgupta.careercompass.job.JobMapper;
 import com.dasgupta.careercompass.job.JobRepository;
-import com.dasgupta.careercompass.user.User;
-import com.dasgupta.careercompass.user.UserRepository;
+import com.dasgupta.careercompass.user.Candidate;
+import com.dasgupta.careercompass.user.CandidateRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,48 +17,45 @@ import java.util.stream.Collectors;
 @Transactional
 public class BookmarkServiceImpl implements BookmarkService {
     private final BookmarkRepository bookmarkRepository;
-    private final UserRepository userRepository;
+    private final CandidateRepository candidateRepository;
     private final JobRepository jobRepository;
     private final JobMapper jobMapper;
 
     @Autowired
-    public BookmarkServiceImpl(BookmarkRepository bookmarkRepository, UserRepository userRepository, JobRepository jobRepository,
-                               JobMapper jobMapper) {
+    public BookmarkServiceImpl(BookmarkRepository bookmarkRepository, JobRepository jobRepository, JobMapper jobMapper, CandidateRepository candidateRepository) {
         this.bookmarkRepository = bookmarkRepository;
-        this.userRepository = userRepository;
         this.jobRepository = jobRepository;
         this.jobMapper = jobMapper;
+        this.candidateRepository = candidateRepository;
     }
 
     public void addBookmark(Integer userId, Integer jobId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Candidate candidate = candidateRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new RuntimeException("Job not found"));
 
-        if (!bookmarkRepository.existsByUserAndJob(user, job)) {
-            Bookmark bookmark = new Bookmark().setUser(user).setJob(job);
+        if (!bookmarkRepository.existsByCandidateAndJob(candidate, job)) {
+            Bookmark bookmark = new Bookmark().setCandidate(candidate).setJob(job);
             bookmarkRepository.save(bookmark);
         }
     }
 
     public void removeBookmark(Integer userId, Integer jobId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Candidate candidate = candidateRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new RuntimeException("Job not found"));
 
-        bookmarkRepository.findByUserAndJob(user, job).ifPresent(bookmarkRepository::delete);
+        bookmarkRepository.findByCandidateAndJob(candidate, job).ifPresent(bookmarkRepository::delete);
     }
 
     public List<JobDto> getBookmarkedJobs(Integer userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        
-        return bookmarkRepository.findByUser(user).stream()
-                .map(bookmark -> jobMapper.toDto(bookmark.getJob()))
-                .collect(Collectors.toList());
+        Candidate candidate = candidateRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        return bookmarkRepository.findByCandidate(candidate).stream().map(bookmark -> jobMapper.toDto(bookmark.getJob())).collect(Collectors.toList());
     }
 
     public boolean isJobBookmarked(Integer userId, Integer jobId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Candidate candidate = candidateRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new RuntimeException("Job not found"));
 
-        return bookmarkRepository.existsByUserAndJob(user, job);
+        return bookmarkRepository.existsByCandidateAndJob(candidate, job);
     }
 }

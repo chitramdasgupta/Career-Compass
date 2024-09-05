@@ -23,8 +23,7 @@ public class AuthenticationController {
     private final Environment env;
     private final AuthResponseUserMapper authResponseUserMapper;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, Environment env,
-                                    AuthResponseUserMapper authResponseUserMapper) {
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, Environment env, AuthResponseUserMapper authResponseUserMapper) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
         this.env = env;
@@ -34,8 +33,10 @@ public class AuthenticationController {
     @PostMapping("/signup")
     public ResponseEntity<AuthResponseUserDto> register(@RequestBody AuthRequestUserDto authRequestUserDto) {
         log.info("Register endpoint hit with for user with email: {}", authRequestUserDto.getEmail());
-        AuthResponseUserDto registeredUserDto = authenticationService.register(authRequestUserDto);
 
+        log.info("The User requested registration with the data: {}", authRequestUserDto);
+
+        AuthResponseUserDto registeredUserDto = authenticationService.register(authRequestUserDto);
         log.info("User is registered: {}", registeredUserDto.getEmail());
 
         return ResponseEntity.ok(registeredUserDto);
@@ -51,27 +52,18 @@ public class AuthenticationController {
         ResponseCookie jwtCookie = getJwtCookie(authenticatedUser);
         log.info("Response Cookie with JWT is generated");
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body(authResponseUserMapper.toDto(authenticatedUser));
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(authResponseUserMapper.toDto(authenticatedUser));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout() {
         log.info("Logout endpoint called");
 
-        ResponseCookie jwtCookie = ResponseCookie.from("jwt", "")
-                .httpOnly(true)
-                .secure(Arrays.asList(env.getActiveProfiles()).contains("prod"))
-                .path("/")
-                .maxAge(0)
-                .build();
+        ResponseCookie jwtCookie = ResponseCookie.from("jwt", "").httpOnly(true).secure(Arrays.asList(env.getActiveProfiles()).contains("prod")).path("/").maxAge(0).build();
 
         log.info("JWT cookie cleared");
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .build();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).build();
     }
 
     private ResponseCookie getJwtCookie(User authenticatedUser) {
@@ -81,11 +73,6 @@ public class AuthenticationController {
         boolean isSecure = Arrays.asList(env.getActiveProfiles()).contains("prod");
         log.info("isSecure: {}", isSecure);
 
-        return ResponseCookie.from("jwt", jwtToken)
-                .httpOnly(true)
-                .secure(isSecure)
-                .path("/")
-                .maxAge(jwtService.getExpirationTime())
-                .build();
+        return ResponseCookie.from("jwt", jwtToken).httpOnly(true).secure(isSecure).path("/").maxAge(jwtService.getExpirationTime()).build();
     }
 }

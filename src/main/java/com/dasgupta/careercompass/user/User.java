@@ -1,8 +1,5 @@
 package com.dasgupta.careercompass.user;
 
-import com.dasgupta.careercompass.bookmark.Bookmark;
-import com.dasgupta.careercompass.company.CompanyReview;
-import com.dasgupta.careercompass.jobApplication.JobApplication;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -18,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users", indexes = {@Index(name = "idx_user_on_email", columnList = "email")})
@@ -38,31 +34,13 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user")
-    @ToString.Exclude
-    private Set<JobApplication> jobApplications;
-
-    @OneToMany(mappedBy = "user")
-    @ToString.Exclude
-    List<CompanyReview> reviews;
-
-    private String firstName;
-
-    private String middleName;
-
-    private String lastName;
-
-    @OneToMany(mappedBy = "user")
-    @ToString.Exclude
-    private Set<Bookmark> bookmarks;
-
     @NotNull
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)
     @Column(nullable = false)
     private Role role;
 
-    // Returns the user's roles
+    // UserDetails methods implementation
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

@@ -1,6 +1,6 @@
 package com.dasgupta.careercompass.company;
 
-import com.dasgupta.careercompass.user.UserDto;
+import com.dasgupta.careercompass.user.CandidateDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -11,6 +11,6 @@ import lombok.experimental.Accessors;
 public class CompanyReviewDto {
     Integer id;
     Integer companyId;
-    UserDto user;
+    CandidateDto candidate;
     Integer rating;
 }

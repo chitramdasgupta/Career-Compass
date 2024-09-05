@@ -1,7 +1,7 @@
 package com.dasgupta.careercompass.bookmark;
 
 import com.dasgupta.careercompass.job.Job;
-import com.dasgupta.careercompass.user.User;
+import com.dasgupta.careercompass.user.Candidate;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,8 @@ public class Bookmark {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "candidate_id")
+    private Candidate candidate;
 
     @ManyToOne
     @JoinColumn(name = "job_id")
