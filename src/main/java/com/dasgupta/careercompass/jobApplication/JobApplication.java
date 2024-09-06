@@ -20,7 +20,7 @@ import lombok.ToString;
 public class JobApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "job_id")

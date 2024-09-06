@@ -9,5 +9,5 @@ import java.util.Map;
 @Setter
 public class JobApplicationSubmissionDto {
     private Integer jobId;
-    private Map<Long, String> responses;
+    private Map<Integer, String> responses;
 }

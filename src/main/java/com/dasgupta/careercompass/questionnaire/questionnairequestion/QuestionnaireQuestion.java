@@ -17,7 +17,7 @@ import lombok.ToString;
 public class QuestionnaireQuestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "questionnaire_id", nullable = false)

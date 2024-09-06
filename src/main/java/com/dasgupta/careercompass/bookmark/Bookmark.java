@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 public class Bookmark {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "candidate_id")

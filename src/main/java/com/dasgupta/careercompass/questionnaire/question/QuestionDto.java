@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class QuestionDto {
-    private Long id;
+    private Integer id;
     private String text;
     private QuestionType type;
 }

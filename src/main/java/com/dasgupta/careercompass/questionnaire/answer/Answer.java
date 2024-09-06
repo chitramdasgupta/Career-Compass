@@ -17,7 +17,7 @@ import lombok.ToString;
 public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @OneToOne(optional = false)
     private Candidate candidate;

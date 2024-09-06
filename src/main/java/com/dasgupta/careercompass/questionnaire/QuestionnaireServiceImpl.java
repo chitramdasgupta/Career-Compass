@@ -21,7 +21,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public List<QuestionnaireQuestionDto> getQuestionsByQuestionnaireId(Long id) {
+    public List<QuestionnaireQuestionDto> getQuestionsByQuestionnaireId(Integer id) {
         return questionnaireRepository.findById(id)
                 .map(Questionnaire::getQuestionnaireQuestions)
                 .map(questions -> questions.stream()

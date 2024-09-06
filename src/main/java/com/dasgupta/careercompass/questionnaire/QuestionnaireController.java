@@ -21,7 +21,7 @@ public class QuestionnaireController {
     }
 
     @GetMapping("{id}/questions")
-    public ResponseEntity<List<QuestionnaireQuestionDto>> getQuestionsByQuestionnaireId(@PathVariable Long id) {
+    public ResponseEntity<List<QuestionnaireQuestionDto>> getQuestionsByQuestionnaireId(@PathVariable Integer id) {
         List<QuestionnaireQuestionDto> questions = questionnaireService.getQuestionsByQuestionnaireId(id);
         return ResponseEntity.ok(questions);
     }

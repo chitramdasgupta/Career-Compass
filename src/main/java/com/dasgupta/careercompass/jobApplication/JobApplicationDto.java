@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class JobApplicationDto {
-    private Long id;
+    private Integer id;
     private JobDto job;
     private CandidateDto candidate;
 }

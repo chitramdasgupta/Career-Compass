@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class QuestionnaireQuestionDto {
-    private Long id;
+    private Integer id;
     private QuestionDto question;
     private Integer displayOrder;
 }

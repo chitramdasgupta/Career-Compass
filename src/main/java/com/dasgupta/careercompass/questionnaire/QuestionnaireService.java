@@ -5,5 +5,5 @@ import com.dasgupta.careercompass.questionnaire.questionnairequestion.Questionna
 import java.util.List;
 
 public interface QuestionnaireService {
-    List<QuestionnaireQuestionDto> getQuestionsByQuestionnaireId(Long id);
+    List<QuestionnaireQuestionDto> getQuestionsByQuestionnaireId(Integer id);
 }
