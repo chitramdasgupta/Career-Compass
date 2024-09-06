@@ -33,6 +33,7 @@ public class JobController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
+        log.info("The authenticated user is {}", user);
 
         Page<JobDto> jobs = jobService.getAllJobs(pageable, user.getId());
         log.info("The jobs are: {}", jobs);

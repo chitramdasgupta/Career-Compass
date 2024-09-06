@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public interface CandidateRepository extends JpaRepository<Candidate, Integer> {
     Optional<Candidate> findByUserId(Integer userId);
+
+    Optional<Candidate> findByUser(User user);
 }

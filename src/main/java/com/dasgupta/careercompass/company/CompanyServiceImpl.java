@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -46,10 +45,7 @@ public class CompanyServiceImpl implements CompanyService {
             log.info("Company found in repository: {}", company.get());
             return Optional.of(companyMapper.toDto(company.get()));
         } else {
-            log.warn("Company not found in repository with id: {}", id);
-            // Let's try a direct database query
-            List<Company> companies = companyRepository.findAll();
-            log.info("All companies in database: {}", companies);
+            log.info("Company not found in repository with id: {}", id);
             return Optional.empty();
         }
     }

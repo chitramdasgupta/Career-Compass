@@ -1,5 +1,6 @@
 package com.dasgupta.careercompass.user;
 
+import com.dasgupta.careercompass.company.CompanyDto;
 import com.dasgupta.careercompass.company.CompanyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,25 +36,30 @@ public class UserController {
     public ResponseEntity<?> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
+        log.info("The user is: {}", user.getEmail());
 
         Optional<UserDto> userDto = userService.getUserByEmail(user.getEmail());
         if (userDto.isPresent()) {
             log.info("User found: {}", userDto.get().getEmail());
-
             return switch (userDto.get().getRole()) {
-                case Role.ROLE_CANDIDATE ->
-                        ResponseEntity.ok(candidateService.getCandidateByUserId(userDto.get().getId())
-                                .orElseThrow(() -> new RuntimeException("Candidate not found")));
-                case Role.ROLE_COMPANY -> ResponseEntity.ok(companyService.getCompanyById(userDto.get().getId())
-                        .orElseThrow(() -> new RuntimeException("Company not found")));
+                case Role.ROLE_CANDIDATE -> {
+                    CandidateDto candidate = candidateService.getCandidateByUserId(user.getId())
+                            .orElseThrow(() -> new RuntimeException("Candidate not found"));
+                    yield ResponseEntity.ok(candidate);
+                }
+                case Role.ROLE_COMPANY -> {
+                    CompanyDto company = companyService.getCompanyByUserId(user.getId())
+                            .orElseThrow(() -> new RuntimeException("Company not found"));
+                    yield ResponseEntity.ok(company);
+                }
                 default -> ResponseEntity.ok(userDto.get());
             };
         } else {
             log.info("User not found: {}", user.getEmail());
-            
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @GetMapping("/roles")
     public ResponseEntity<List<String>> getAllRoles() {
