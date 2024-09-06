@@ -1,5 +1,6 @@
-package com.dasgupta.careercompass.user;
+package com.dasgupta.careercompass.candidate;
 
+import com.dasgupta.careercompass.user.UserMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

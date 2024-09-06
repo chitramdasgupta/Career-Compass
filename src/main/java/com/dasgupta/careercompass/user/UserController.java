@@ -1,5 +1,7 @@
 package com.dasgupta.careercompass.user;
 
+import com.dasgupta.careercompass.candidate.CandidateDto;
+import com.dasgupta.careercompass.candidate.CandidateService;
 import com.dasgupta.careercompass.company.CompanyDto;
 import com.dasgupta.careercompass.company.CompanyService;
 import org.slf4j.Logger;

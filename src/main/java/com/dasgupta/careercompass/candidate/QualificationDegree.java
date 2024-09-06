@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.user;
+package com.dasgupta.careercompass.candidate;
 
 public enum QualificationDegree {
     HIGH_SCHOOL("HIGH_SCHOOL"),

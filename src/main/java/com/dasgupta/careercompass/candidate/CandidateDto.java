@@ -1,5 +1,6 @@
-package com.dasgupta.careercompass.user;
+package com.dasgupta.careercompass.candidate;
 
+import com.dasgupta.careercompass.user.UserDto;
 import lombok.Getter;
 import lombok.Setter;
 

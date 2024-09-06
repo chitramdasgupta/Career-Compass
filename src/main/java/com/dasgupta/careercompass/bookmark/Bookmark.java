@@ -1,7 +1,7 @@
 package com.dasgupta.careercompass.bookmark;
 
+import com.dasgupta.careercompass.candidate.Candidate;
 import com.dasgupta.careercompass.job.Job;
-import com.dasgupta.careercompass.user.Candidate;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,12 @@
 package com.dasgupta.careercompass.authentication;
 
+import com.dasgupta.careercompass.candidate.Candidate;
+import com.dasgupta.careercompass.candidate.CandidateRepository;
 import com.dasgupta.careercompass.company.Company;
 import com.dasgupta.careercompass.company.CompanyRepository;
-import com.dasgupta.careercompass.user.*;
+import com.dasgupta.careercompass.user.Role;
+import com.dasgupta.careercompass.user.User;
+import com.dasgupta.careercompass.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

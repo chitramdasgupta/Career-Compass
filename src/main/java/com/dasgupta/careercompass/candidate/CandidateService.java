@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.user;
+package com.dasgupta.careercompass.candidate;
 
 import java.util.Optional;
 

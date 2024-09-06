@@ -1,11 +1,11 @@
 package com.dasgupta.careercompass.bookmark;
 
+import com.dasgupta.careercompass.candidate.Candidate;
+import com.dasgupta.careercompass.candidate.CandidateRepository;
 import com.dasgupta.careercompass.job.Job;
 import com.dasgupta.careercompass.job.JobDto;
 import com.dasgupta.careercompass.job.JobMapper;
 import com.dasgupta.careercompass.job.JobRepository;
-import com.dasgupta.careercompass.user.Candidate;
-import com.dasgupta.careercompass.user.CandidateRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

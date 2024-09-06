@@ -1,13 +1,13 @@
 package com.dasgupta.careercompass.jobApplication;
 
+import com.dasgupta.careercompass.candidate.Candidate;
+import com.dasgupta.careercompass.candidate.CandidateRepository;
 import com.dasgupta.careercompass.job.Job;
 import com.dasgupta.careercompass.job.JobRepository;
 import com.dasgupta.careercompass.questionnaire.answer.Answer;
 import com.dasgupta.careercompass.questionnaire.answer.AnswerRepository;
 import com.dasgupta.careercompass.questionnaire.question.Question;
 import com.dasgupta.careercompass.questionnaire.question.QuestionRepository;
-import com.dasgupta.careercompass.user.Candidate;
-import com.dasgupta.careercompass.user.CandidateRepository;
 import com.dasgupta.careercompass.user.User;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
