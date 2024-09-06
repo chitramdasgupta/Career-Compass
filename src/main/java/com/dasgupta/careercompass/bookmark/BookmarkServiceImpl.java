@@ -33,7 +33,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         Candidate candidate = candidateRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new RuntimeException("Job not found"));
 
-        if (!bookmarkRepository.existsByCandidateAndJob(candidate, job)) {
+        if (!bookmarkRepository.existsByCandidateIdAndJobId(candidate.getId(), job.getId())) {
             Bookmark bookmark = new Bookmark().setCandidate(candidate).setJob(job);
             bookmarkRepository.save(bookmark);
         }
@@ -43,19 +43,19 @@ public class BookmarkServiceImpl implements BookmarkService {
         Candidate candidate = candidateRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new RuntimeException("Job not found"));
 
-        bookmarkRepository.findByCandidateAndJob(candidate, job).ifPresent(bookmarkRepository::delete);
+        bookmarkRepository.findByCandidateIdAndJobId(candidate.getId(), job.getId()).ifPresent(bookmarkRepository::delete);
     }
 
     public List<JobDto> getBookmarkedJobs(Integer userId) {
         Candidate candidate = candidateRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
-        return bookmarkRepository.findByCandidate(candidate).stream().map(bookmark -> jobMapper.toDto(bookmark.getJob())).collect(Collectors.toList());
+        return bookmarkRepository.findByCandidateId(candidate.getId()).stream().map(bookmark -> jobMapper.toDto(bookmark.getJob())).collect(Collectors.toList());
     }
 
     public boolean isJobBookmarked(Integer userId, Integer jobId) {
         Candidate candidate = candidateRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new RuntimeException("Job not found"));
 
-        return bookmarkRepository.existsByCandidateAndJob(candidate, job);
+        return bookmarkRepository.existsByCandidateIdAndJobId(candidate.getId(), job.getId());
     }
 }

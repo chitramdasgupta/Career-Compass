@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        
+
         log.info("JwtAuthenticationFilter triggered for URI: {}", request.getRequestURI());
         final String jwt = extractJwtFromCookie(request);
 

@@ -1,16 +1,16 @@
 package com.dasgupta.careercompass.bookmark;
 
-import com.dasgupta.careercompass.candidate.Candidate;
-import com.dasgupta.careercompass.job.Job;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark, Integer> {
-    Optional<Bookmark> findByCandidateAndJob(Candidate candidate, Job job);
+    Optional<Bookmark> findByCandidateIdAndJobId(Integer candidateId, Integer jobId);
 
-    List<Bookmark> findByCandidate(Candidate candidate);
+    List<Bookmark> findByCandidateId(Integer candidateId);
 
-    boolean existsByCandidateAndJob(Candidate candidate, Job job);
+    boolean existsByCandidateIdAndJobId(Integer candidateId, Integer jobId);
 }

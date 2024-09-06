@@ -19,26 +19,21 @@ import java.util.Set;
 @ToString
 @RequiredArgsConstructor
 public class Candidate {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    private String firstName;
-    private String middleName;
-    private String lastName;
-
-    @OneToMany(mappedBy = "candidate")
-    @ToString.Exclude
-    private Set<JobApplication> jobApplications;
-
     @OneToMany(mappedBy = "candidate")
     @ToString.Exclude
     List<CompanyReview> reviews;
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    @OneToMany(mappedBy = "candidate")
+    @ToString.Exclude
+    private Set<JobApplication> jobApplications;
     @OneToMany(mappedBy = "candidate")
     @ToString.Exclude
     private Set<Bookmark> bookmarks;

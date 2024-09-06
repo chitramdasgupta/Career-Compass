@@ -18,24 +18,20 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 public class Company {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @NotBlank(message = "Name cannot be blank")
-    @Column(nullable = false)
-    private String name;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
     @OneToMany(mappedBy = "company")
     @ToString.Exclude
     List<CompanyReview> reviews;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    @NotBlank(message = "Name cannot be blank")
+    @Column(nullable = false)
+    private String name;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
     // Boiler plate
     @Override
