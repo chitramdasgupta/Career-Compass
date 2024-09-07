@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "next/navigation";
-import { Company } from "../types";
-import { fetchCompany } from "../companiesApi";
+import { useGetCompanyQuery } from "../companiesApi";
 import Card from "@mui/material/Card";
 import { CardContent, CardHeader, Rating } from "@mui/material";
 import { SkeletonList } from "@/app/posts/components/PostSkeleton/skeletonList";
@@ -13,32 +12,15 @@ import Link from "next/link";
 export default function CompanyShow() {
   const params = useParams();
   const id = params.id as string;
-  const [company, setCompany] = useState<Company | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (id) {
-      setLoading(true);
-      fetchCompany(id)
-        .then((fetchedCompany) => {
-          setCompany(fetchedCompany);
-          console.log({ fetchCompany });
-        })
-        .catch((error: Error) => {
-          console.error("Error fetching company:", error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  }, [id]);
+  const { data: company, isLoading, error } = useGetCompanyQuery(id);
 
-  if (loading) {
-    return <SkeletonList count={0} />;
+  if (isLoading) {
+    return <SkeletonList count={1} />;
   }
 
-  if (!company) {
-    return <p>Company not found</p>;
+  if (error || !company) {
+    return <p>Error loading company: {error.toString()}</p>;
   }
 
   return (

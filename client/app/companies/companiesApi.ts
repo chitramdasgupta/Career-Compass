@@ -1,24 +1,29 @@
-import { Company } from "./types";
-import axiosInstance from "../shared/utils/axios";
+import { baseApi } from '@/app/shared/api/baseApi';
+import { Company } from './types';
 
-const COMPANIES_URL = "http://localhost:8080/companies";
+const COMPANIES_URL = "companies"
 
-export async function fetchCompanies(page: number = 1, size: number = 25): Promise<Company[]> {
-  try {
-    const response = await axiosInstance.get<Company[]>(`${COMPANIES_URL}?page=${page}&size=${size}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching companies:", error);
-    throw error;
-  }
-}
+export const companiesApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    getCompanies: builder.query<{
+      content: Company[];
+      last: boolean;
+    }, number>({
+      query: (page) => ({
+        url: COMPANIES_URL,
+        params: { page, size: 25 },
+      }),
+      serializeQueryArgs: ({ endpointName }) => endpointName,
+      merge: (currentCache, newItems) => ({
+        ...newItems,
+        content: [...(currentCache?.content || []), ...newItems.content],
+      }),
+      forceRefetch: ({ currentArg, previousArg }) => currentArg !== previousArg,
+    }),
+    getCompany: builder.query<Company, string>({
+      query: (id) => `${COMPANIES_URL}/${id}`,
+    }),
+  }),
+});
 
-export async function fetchCompany(id: string): Promise<Company> {
-    try {
-      const response = await axiosInstance.get<Company>(`${COMPANIES_URL}/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Error fetching company with ID ${id}:`, error);
-      throw error;
-    }
-}
+export const { useGetCompaniesQuery, useGetCompanyQuery } = companiesApi;
