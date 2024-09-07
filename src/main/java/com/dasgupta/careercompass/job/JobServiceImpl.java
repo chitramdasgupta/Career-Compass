@@ -18,12 +18,14 @@ public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
     private final JobMapper jobMapper;
     private final BookmarkService bookmarkService;
+    private final JobCreateMapper jobCreateMapper;
 
     @Autowired
-    public JobServiceImpl(JobRepository jobRepository, JobMapper jobMapper, BookmarkService bookmarkService) {
+    public JobServiceImpl(JobRepository jobRepository, JobMapper jobMapper, BookmarkService bookmarkService, JobCreateMapper jobCreateMapper) {
         this.jobRepository = jobRepository;
         this.jobMapper = jobMapper;
         this.bookmarkService = bookmarkService;
+        this.jobCreateMapper = jobCreateMapper;
     }
 
     @Override
@@ -49,5 +51,15 @@ public class JobServiceImpl implements JobService {
         dto.setBookmarked(bookmarkService.isJobBookmarked(userId, id));
 
         return jobRepository.findById(id).map(jobMapper::toDto);
+    }
+
+    @Override
+    public JobDto createJob(JobCreateRequestDto jobCreateRequestDto, Integer companyId) {
+        log.info("Service createJob called with job dto = {}", jobCreateRequestDto);
+
+        Job job = jobCreateMapper.toEntity(jobCreateRequestDto);
+        job = jobRepository.save(job);
+
+        return jobMapper.toDto(job);
     }
 }
