@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.company;
+package com.dasgupta.careercompass.company.companyReview;
 
 import lombok.Getter;
 import lombok.Setter;

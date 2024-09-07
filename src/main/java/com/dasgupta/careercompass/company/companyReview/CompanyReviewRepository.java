@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.company;
+package com.dasgupta.careercompass.company.companyReview;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

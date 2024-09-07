@@ -1,6 +1,8 @@
-package com.dasgupta.careercompass.company;
+package com.dasgupta.careercompass.company.companyReview;
 
 import com.dasgupta.careercompass.candidate.CandidateMapper;
+import com.dasgupta.careercompass.company.Company;
+import com.dasgupta.careercompass.company.CompanyMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

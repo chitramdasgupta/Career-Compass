@@ -1,5 +1,7 @@
 package com.dasgupta.careercompass.company;
 
+import com.dasgupta.careercompass.company.companyReview.CompanyReviewDto;
+import com.dasgupta.careercompass.company.companyReview.ReviewDto;
 import com.dasgupta.careercompass.constants.Constants;
 import com.dasgupta.careercompass.user.User;
 import org.slf4j.Logger;
