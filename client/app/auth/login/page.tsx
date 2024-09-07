@@ -1,20 +1,19 @@
 "use client";
 
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { loginUser } from "../authApi";
 import { LoginUserDto } from "../types";
 import { useRouter } from "next/navigation";
+import { useLoginUserMutation } from "../authApi";
+import CustomSnackbar from "@/app/shared/components/CustomSnackbar";
+import {
+  Severity,
+  SnackbarMessage,
+} from "@/app/shared/components/CustomSnackbar/types";
+import Link from "next/link";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -25,21 +24,15 @@ type LoginFormInputs = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const router = useRouter();
+  const [loginUser, { isLoading }] = useLoginUserMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormInputs>({ resolver: zodResolver(loginSchema) });
 
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success",
-  );
-
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
-  };
+  const [snackbarMessage, setSnackbarMessage] =
+    useState<SnackbarMessage | null>(null);
 
   const onSubmit = async (data: LoginFormInputs) => {
     const loginData: LoginUserDto = {
@@ -48,18 +41,19 @@ export default function Login() {
     };
 
     try {
-      const response = await loginUser(loginData);
-      console.log("Login successful!", response);
-      setSnackbarMessage("Login successful!");
-      setSnackbarSeverity("success");
-      setOpenSnackbar(true);
+      await loginUser(loginData).unwrap();
 
       router.push("/jobs");
+
+      setSnackbarMessage({
+        message: "Login successful!",
+        severity: Severity.Success,
+      });
     } catch (error) {
-      console.error("Login failed:", error);
-      setSnackbarMessage("Login failed. Please check your credentials.");
-      setSnackbarSeverity("error");
-      setOpenSnackbar(true);
+      setSnackbarMessage({
+        message: "Login failed. Please check your credentials.",
+        severity: Severity.Error,
+      });
     }
   };
 
@@ -86,24 +80,21 @@ export default function Login() {
           error={!!errors.password}
           helperText={errors.password?.message}
         />
-        <Button type="submit" variant="contained" color="primary">
-          Login
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={isLoading}
+        >
+          {isLoading ? "Logging in..." : "Login"}
         </Button>
       </form>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbarSeverity}
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      <Box sx={{ mt: 2, textAlign: "center" }}>
+        <Typography variant="body2">
+          Don't have an account? <Link href="/auth/signup">Sign up here</Link>
+        </Typography>
+      </Box>
+      <CustomSnackbar snackbarMessage={snackbarMessage} />
     </Box>
   );
 }

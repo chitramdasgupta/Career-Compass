@@ -14,18 +14,25 @@ import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import Button from "@mui/material/Button";
 import { Container } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { logoutUser } from "@/app/auth/authApi";
+import { useLogoutUserMutation } from "@/app/auth/authApi";
+import CustomSnackbar from "@/app/shared/components/CustomSnackbar";
+import { Severity, SnackbarMessage } from "../CustomSnackbar/types";
+import { useAuth } from "../../hooks/useAuth";
 
 const pages = ["Jobs", "Companies"];
 
 function AppNavbar() {
   const router = useRouter();
+  const { isAuthenticated, isCandidate, isCompany, user } = useAuth();
+  const [logoutUser, { isLoading }] = useLogoutUserMutation();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
   const [anchorElMenu, setAnchorElMenu] = React.useState<null | HTMLElement>(
     null,
   );
+  const [snackbarMessage, setSnackbarMessage] =
+    React.useState<SnackbarMessage | null>(null);
 
   const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -44,11 +51,23 @@ function AppNavbar() {
   };
 
   const handleLogout = async () => {
-    await logoutUser();
+    try {
+      await logoutUser().unwrap();
 
-    handleUserMenuClose();
+      handleUserMenuClose();
 
-    router.push("/auth/login");
+      router.push("/auth/login");
+
+      setSnackbarMessage({
+        message: "Logged out successfully",
+        severity: Severity.Success,
+      });
+    } catch (error) {
+      setSnackbarMessage({
+        message: "Logout failed. Please try again.",
+        severity: Severity.Error,
+      });
+    }
   };
 
   return (
@@ -71,7 +90,6 @@ function AppNavbar() {
               sx={{ marginLeft: "4px", marginTop: "4px", fontSize: "inherit" }}
             />
           </Link>
-
           {/* Desktop menu items */}
           <Box sx={{ display: { xs: "none", md: "flex" }, marginLeft: "auto" }}>
             {pages.map((page) => (
@@ -85,7 +103,6 @@ function AppNavbar() {
               </Button>
             ))}
           </Box>
-
           {/* Mobile menu */}
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton size="large" onClick={handleMenuOpen} color="inherit">
@@ -116,39 +133,45 @@ function AppNavbar() {
               ))}
             </Menu>
           </Box>
-
           {/* User menu */}
-          <Box>
-            <IconButton onClick={handleUserMenuOpen} color="inherit">
-              <Avatar>G</Avatar>
-            </IconButton>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="user-menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleUserMenuClose}
-            >
-              <MenuItem onClick={handleUserMenuClose}>
-                <Link href="/profile">Profile</Link>
-              </MenuItem>
-              <MenuItem onClick={handleUserMenuClose}>
-                <Link href="/dashboard">Dashboard</Link>
-              </MenuItem>
-              <MenuItem onClick={handleLogout}>Log out</MenuItem>
-            </Menu>
-          </Box>
+          {isAuthenticated ? (
+            <Box>
+              <IconButton onClick={handleUserMenuOpen} color="inherit">
+                <Avatar>G</Avatar>
+              </IconButton>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="user-menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleUserMenuClose}
+              >
+                <MenuItem onClick={handleUserMenuClose}>
+                  <Link href="/profile">Profile</Link>
+                </MenuItem>
+                <MenuItem onClick={handleUserMenuClose}>
+                  <Link href="/dashboard">Dashboard</Link>
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>Log out</MenuItem>
+              </Menu>
+            </Box>
+          ) : (
+            <Button color="inherit" component={Link} href="/auth/login">
+              Login
+            </Button>
+          )}
         </Toolbar>
       </Container>
+      <CustomSnackbar snackbarMessage={snackbarMessage} />
     </AppBar>
   );
 }
