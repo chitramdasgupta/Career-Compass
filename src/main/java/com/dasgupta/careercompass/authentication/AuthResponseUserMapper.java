@@ -11,5 +11,6 @@ public interface AuthResponseUserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "role", ignore = true)
+//    @Mapping(target = "authorities", ignore = true)
     User toEntity(AuthResponseUserDto authResponseUserDto);
 }

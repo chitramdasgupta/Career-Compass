@@ -6,8 +6,10 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface AuthRequestUserMapper {
+    @Mapping(target = "name", ignore = true)
     AuthRequestUserDto toDto(User user);
 
     @Mapping(target = "id", ignore = true)
+//    @Mapping(target = "authorities", ignore = true)
     User toEntity(AuthRequestUserDto authRequestUserDto);
 }

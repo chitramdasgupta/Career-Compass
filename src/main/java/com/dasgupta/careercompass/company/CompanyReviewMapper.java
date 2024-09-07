@@ -1,11 +1,12 @@
 package com.dasgupta.careercompass.company;
 
+import com.dasgupta.careercompass.candidate.CandidateMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = {CompanyMapper.class})
+@Mapper(componentModel = "spring", uses = {CompanyMapper.class, CandidateMapper.class})
 public interface CompanyReviewMapper {
     @Mapping(target = "companyId", source = "company.id")
     CompanyReviewDto toDto(CompanyReview companyReview);
