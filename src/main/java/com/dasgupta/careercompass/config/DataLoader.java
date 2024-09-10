@@ -11,6 +11,7 @@ import com.dasgupta.careercompass.company.companyReview.CompanyReviewRepository;
 import com.dasgupta.careercompass.job.Job;
 import com.dasgupta.careercompass.job.JobLocation;
 import com.dasgupta.careercompass.job.JobRepository;
+import com.dasgupta.careercompass.job.JobStatus;
 import com.dasgupta.careercompass.jobApplication.JobApplication;
 import com.dasgupta.careercompass.jobApplication.JobApplicationRepository;
 import com.dasgupta.careercompass.post.Post;
@@ -162,6 +163,7 @@ public class DataLoader implements CommandLineRunner {
                 job.setMinimumSalary(BigDecimal.valueOf(faker.number().numberBetween(30000, 80000)));
                 job.setMaximumSalary(BigDecimal.valueOf(faker.number().numberBetween(80001, 150000)));
                 job.setCurrency(CurrencyCode.USD);
+                job.setStatus(faker.options().option(JobStatus.class));
                 jobs.add(jobRepository.save(job));
             }
         }

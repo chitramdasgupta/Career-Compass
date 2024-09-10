@@ -24,4 +24,5 @@ public class JobDto {
     private String currency;
     private QuestionnaireDto questionnaire;
     private boolean isBookmarked;
+    private JobStatus status;
 }

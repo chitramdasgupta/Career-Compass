@@ -25,4 +25,5 @@ public class LoggedInCompanyJobDto {
     private BigDecimal maximumSalary;
     private CurrencyCode currency;
     private QuestionnaireDto questionnaire;
+    private JobStatus status;
 }

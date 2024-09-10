@@ -3,6 +3,7 @@ package com.dasgupta.careercompass.job;
 import com.dasgupta.careercompass.company.CompanyDto;
 import com.dasgupta.careercompass.company.CompanyService;
 import com.dasgupta.careercompass.constants.Constants;
+import com.dasgupta.careercompass.questionnaire.QuestionnaireDto;
 import com.dasgupta.careercompass.user.Role;
 import com.dasgupta.careercompass.user.User;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -26,11 +28,13 @@ public class JobController {
     private static final Logger log = LoggerFactory.getLogger(JobController.class);
     private final JobService jobService;
     private final CompanyService companyService;
+    private final JobRepository jobRepository;
 
     @Autowired
-    public JobController(JobService jobService, CompanyService companyService) {
+    public JobController(JobService jobService, CompanyService companyService, JobRepository jobRepository) {
         this.jobService = jobService;
         this.companyService = companyService;
+        this.jobRepository = jobRepository;
     }
 
     @GetMapping("")
@@ -63,21 +67,65 @@ public class JobController {
 
     @PostMapping("")
     public ResponseEntity<JobDto> createJob(@Valid @RequestBody JobCreateRequestDto jobDto) {
-        log.info("createJob called with jobDto={}", jobDto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        CompanyDto company = companyService.getCompanyByUserId(user.getId()).orElseThrow();
+        if (user.getRole() != Role.ROLE_COMPANY) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        jobDto.setCompanyId(company.getId());
+        jobDto.setStatus(JobStatus.QUESTIONNAIRE_PENDING);
+
+        JobDto createdJob = jobService.createJob(jobDto, company.getId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdJob);
+    }
+
+    @PostMapping("/{jobId}/questionnaire")
+    public ResponseEntity<JobDto> createQuestionnaire(@PathVariable int jobId, @Valid @RequestBody QuestionnaireDto questionnaireDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        Job job = jobRepository.findById(jobId).orElseThrow();
+
+        if (user.getRole() != Role.ROLE_COMPANY || !Objects.equals(job.getCompany().getUser().getId(), user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        JobDto updatedJob = jobService.createQuestionnaireForJob(jobId, questionnaireDto, user.getId());
+        return ResponseEntity.ok(updatedJob);
+    }
+
+    @GetMapping("/{jobId}/questionnaire")
+    public ResponseEntity<QuestionnaireDto> getJobQuestionnaire(@PathVariable int jobId) {
+        log.info("getJobQuestionnaire called with jobId={}", jobId);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        Optional<QuestionnaireDto> questionnaireDto = jobService.getJobQuestionnaire(jobId, user.getId());
+
+        if (questionnaireDto.isPresent()) {
+            log.info("Questionnaire found for jobId={}", jobId);
+            return ResponseEntity.ok(questionnaireDto.get());
+        } else {
+            log.info("Questionnaire not found for jobId={}", jobId);
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/{jobId}/post")
+    public ResponseEntity<JobDto> postJob(@PathVariable int jobId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
         if (user.getRole() != Role.ROLE_COMPANY) {
-            log.info("Tried to create a job with role = {}", user.getRole());
-
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        CompanyDto company = companyService.getCompanyByUserId(user.getId()).get();
-        jobDto.setCompanyId(company.getId());
-        
-        JobDto createdJob = jobService.createJob(jobDto, company.getId());
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdJob);
+        JobDto postedJob = jobService.postJob(jobId, user.getId());
+        return ResponseEntity.ok(postedJob);
     }
 }

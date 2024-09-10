@@ -4,12 +4,12 @@ import com.dasgupta.careercompass.questionnaire.questionnairequestion.Questionna
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
 public class QuestionnaireDto {
     private Integer id;
     private String description;
-    private Set<QuestionnaireQuestionDto> questionnaireQuestions;
+    private List<QuestionnaireQuestionDto> questionnaireQuestions;
 }

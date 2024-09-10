@@ -21,4 +21,5 @@ public class JobCreateRequestDto {
     private BigDecimal maximumSalary;
     private String currency;
     private QuestionnaireDto questionnaire;
+    private JobStatus status;
 }
