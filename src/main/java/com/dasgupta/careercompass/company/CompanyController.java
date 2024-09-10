@@ -3,6 +3,8 @@ package com.dasgupta.careercompass.company;
 import com.dasgupta.careercompass.company.companyReview.CompanyReviewDto;
 import com.dasgupta.careercompass.company.companyReview.ReviewDto;
 import com.dasgupta.careercompass.constants.Constants;
+import com.dasgupta.careercompass.job.JobDto;
+import com.dasgupta.careercompass.job.JobService;
 import com.dasgupta.careercompass.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +24,12 @@ import java.util.Optional;
 public class CompanyController {
     private static final Logger log = LoggerFactory.getLogger(CompanyController.class);
     private final CompanyService companyService;
+    private final JobService jobService;
 
     @Autowired
-    public CompanyController(CompanyService companyService) {
+    public CompanyController(CompanyService companyService, JobService jobService) {
         this.companyService = companyService;
+        this.jobService = jobService;
     }
 
     @GetMapping("")
@@ -57,5 +61,17 @@ public class CompanyController {
 
         Optional<CompanyReviewDto> resultReviewDto = companyService.createReview(id, reviewDto.getRating(), user);
         return resultReviewDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/jobs")
+    public Page<JobDto> getCompanyJobs(
+            @PathVariable int id,
+            @RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_SIZE) int size
+    ) {
+        log.info("getCompanyJobs called for company id={} with page={}, size={}", id, page, size);
+
+        Pageable pageable = PageRequest.of(page, size);
+        return jobService.getJobsByCompany(pageable, id);
     }
 }

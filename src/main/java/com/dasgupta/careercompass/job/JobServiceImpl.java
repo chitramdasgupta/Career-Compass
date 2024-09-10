@@ -1,6 +1,7 @@
 package com.dasgupta.careercompass.job;
 
 import com.dasgupta.careercompass.bookmark.BookmarkService;
+import com.dasgupta.careercompass.company.CompanyService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +20,17 @@ public class JobServiceImpl implements JobService {
     private final JobMapper jobMapper;
     private final BookmarkService bookmarkService;
     private final JobCreateMapper jobCreateMapper;
+    private final CompanyService companyService;
+    private final LoggedInCompanyJobMapper loggedInCompanyJobMapper;
 
     @Autowired
-    public JobServiceImpl(JobRepository jobRepository, JobMapper jobMapper, BookmarkService bookmarkService, JobCreateMapper jobCreateMapper) {
+    public JobServiceImpl(JobRepository jobRepository, JobMapper jobMapper, BookmarkService bookmarkService, JobCreateMapper jobCreateMapper, CompanyService companyService, LoggedInCompanyJobMapper loggedInCompanyJobMapper) {
         this.jobRepository = jobRepository;
         this.jobMapper = jobMapper;
         this.bookmarkService = bookmarkService;
         this.jobCreateMapper = jobCreateMapper;
+        this.companyService = companyService;
+        this.loggedInCompanyJobMapper = loggedInCompanyJobMapper;
     }
 
     @Override
@@ -62,4 +67,19 @@ public class JobServiceImpl implements JobService {
 
         return jobMapper.toDto(job);
     }
+
+    @Override
+    public Page<JobDto> getJobsByCompany(Pageable pageable, Integer companyId) {
+        Page<Job> jobPage = jobRepository.findByCompanyId(companyId, pageable);
+
+        return jobPage.map(jobMapper::toDto);
+    }
+
+    @Override
+    public Page<LoggedInCompanyJobDto> getLoggedInCompanyJobs(Pageable pageable, Integer companyId) {
+        Page<Job> jobPage = jobRepository.findByCompanyId(companyId, pageable);
+
+        return jobPage.map(loggedInCompanyJobMapper::toDto);
+    }
+
 }

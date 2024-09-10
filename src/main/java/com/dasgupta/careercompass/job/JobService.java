@@ -11,4 +11,8 @@ public interface JobService {
     Optional<JobDto> getJobById(int id, Integer userId);
 
     JobDto createJob(JobCreateRequestDto jobCreateRequestDto, Integer userId);
+
+    Page<JobDto> getJobsByCompany(Pageable pageable, Integer companyId);
+
+    Page<LoggedInCompanyJobDto> getLoggedInCompanyJobs(Pageable pageable, Integer companyId);
 }
