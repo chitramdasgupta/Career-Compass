@@ -1,25 +1,29 @@
-import { PaginatedResponse } from "../shared/types/paginatedResponseType";
+import { baseApi } from '@/app/shared/api/baseApi';
 import { Job } from "@/app/jobs/types";
-import axiosInstance from "../shared/utils/axios";
 
-const JOBS_URL = "/jobs";
+const JOBS_URL = "jobs";
 
-export async function fetchJob(jobId: string): Promise<Job> {
-  try {
-    const response = await axiosInstance.get<Job>(`${JOBS_URL}/${jobId}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching job:", error);
-    throw error;
-  }
-}
+export const jobsApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    getJobs: builder.query<{
+      content: Job[];
+      last: boolean;
+    }, number>({
+      query: (page) => ({
+        url: JOBS_URL,
+        params: { page, size: 25 },
+      }),
+      serializeQueryArgs: ({ endpointName }) => endpointName,
+      merge: (currentCache, newItems) => ({
+        ...newItems,
+        content: [...(currentCache?.content || []), ...newItems.content],
+      }),
+      forceRefetch: ({ currentArg, previousArg }) => currentArg !== previousArg,
+    }),
+    getJob: builder.query<Job, string>({
+      query: (id) => `${JOBS_URL}/${id}`,
+    }),
+  }),
+});
 
-export async function fetchJobs(page: number, size: number = 25): Promise<PaginatedResponse<Job>> {
-  try {
-    const response = await axiosInstance.get<PaginatedResponse<Job>>(`${JOBS_URL}?page=${page}&size=${size}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching jobs:", error);
-    throw error;
-  }
-}
+export const { useGetJobsQuery, useGetJobQuery } = jobsApi;

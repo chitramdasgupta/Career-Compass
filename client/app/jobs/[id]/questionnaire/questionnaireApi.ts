@@ -1,14 +1,14 @@
-import axiosInstance from "@/app/shared/utils/axios";
+import { baseApi } from '@/app/shared/api/baseApi';
 import { Question } from "./types";
 
 const QUESTIONS_URL = "/questionnaires";
 
-export async function fetchQuestions(questionnaireId: number): Promise<Question[]> {
-  try {
-    const response = await axiosInstance.get<Question[]>(`${QUESTIONS_URL}/${questionnaireId}/questions`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching questions:", error);
-    throw error;
-  }
-}
+export const questionnaireApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    getQuestions: builder.query<Question[], number>({
+      query: (questionnaireId) => `${QUESTIONS_URL}/${questionnaireId}/questions`,
+    }),
+  }),
+});
+
+export const { useGetQuestionsQuery } = questionnaireApi;

@@ -1,67 +1,43 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
-import { Job } from "@/app/jobs/types";
-import { fetchJobs } from "@/app/jobs/jobsApi";
-import { JobDescription } from "./JobDescription";
-import { PaginatedResponse } from "../shared/types/paginatedResponseType";
+import React, { useState } from "react";
 import { Virtuoso } from "react-virtuoso";
-import { JobItem } from "./jobItem";
 import { SkeletonList } from "../posts/components/PostSkeleton/skeletonList";
-import { useRouter } from "next/navigation";
+import { JobItem } from "./jobItem";
+import { JobDescription } from "./JobDescription";
+import { useGetJobsQuery } from "./jobsApi";
 
 export default function Jobs() {
-  const router = useRouter();
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [pageNumber, setPageNumber] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(0);
+  const [selectedJob, setSelectedJob] = useState(null);
 
-  const loadMore = useCallback(() => {
-    if (!hasMore) return;
+  const { data, isLoading, isFetching } = useGetJobsQuery(page, {
+    refetchOnMountOrArgChange: true,
+  });
 
-    fetchJobs(pageNumber)
-      .then((response: PaginatedResponse<Job>) => {
-        console.log({ response });
-        setLoading(false);
-        setJobs((jobs) => [...jobs, ...response.content]);
-        if (selectedJob == null) setSelectedJob(response.content[0]);
+  const jobs = data?.content || [];
+  const hasMore = !data?.last;
 
-        if (response.last) {
-          setHasMore(false);
-        } else {
-          setPageNumber((prevPageNumber) => prevPageNumber + 1);
-        }
-      })
-      .catch((error: Error) => {
-        console.error("Error fetching jobs:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [hasMore, pageNumber, selectedJob]);
-
-  useEffect(() => {
-    loadMore();
-  }, []);
+  const loadMore = () => {
+    if (!isFetching && hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Jobs</h1>
       <div className="md:flex md:gap-4">
         <div className="md:w-1/2" style={{ height: "85vh" }}>
-          {loading ? (
+          {isLoading && jobs.length === 0 ? (
             <SkeletonList count={6} />
           ) : (
             <Virtuoso
               data={jobs}
               endReached={loadMore}
-              itemContent={(_index, job) => {
-                return (
-                  <JobItem job={job} key={job.id} onSelect={setSelectedJob} />
-                );
-              }}
+              itemContent={(_index, job) => (
+                <JobItem job={job} onSelect={setSelectedJob} />
+              )}
             />
           )}
         </div>
