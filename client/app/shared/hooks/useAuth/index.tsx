@@ -9,7 +9,7 @@ export function useAuth() {
     isLoading,
     isError,
     isAuthenticated: !!user,
-    isCandidate: user?.role === Role.ROLE_CANDIDATE,
-    isCompany: user?.role === Role.ROLE_COMPANY,
+    isCandidate: user?.user?.role === Role.ROLE_CANDIDATE,
+    isCompany: user?.user?.role === Role.ROLE_COMPANY,
   };
 }

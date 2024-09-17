@@ -19,7 +19,11 @@ import CustomSnackbar from "@/app/shared/components/CustomSnackbar";
 import { Severity, SnackbarMessage } from "../CustomSnackbar/types";
 import { useAuth } from "../../hooks/useAuth";
 
-const pages = ["Jobs", "Companies"];
+const pages = [
+  { name: "Jobs", permission: "all" },
+  { name: "Job Postings", permission: "ROLE_COMPANY" },
+  { name: "Companies", permission: "all" },
+];
 
 function AppNavbar() {
   const router = useRouter();
@@ -48,6 +52,14 @@ function AppNavbar() {
 
   const handleMenuClose = () => {
     setAnchorElMenu(null);
+  };
+
+  const canAccessPage = (pagePermission: string) => {
+    if (pagePermission === "all") return true;
+
+    if (pagePermission === "ROLE_COMPANY") return isCompany;
+
+    return false;
   };
 
   const handleLogout = async () => {
@@ -92,16 +104,19 @@ function AppNavbar() {
           </Link>
           {/* Desktop menu items */}
           <Box sx={{ display: { xs: "none", md: "flex" }, marginLeft: "auto" }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                component={Link}
-                href={`/${page.toLowerCase()}`}
-                sx={{ color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            {pages.map(
+              (page) =>
+                canAccessPage(page.permission) && (
+                  <Button
+                    key={page.name}
+                    component={Link}
+                    href={`/${page.name.toLowerCase().replace(" ", "-")}`}
+                    sx={{ color: "white", display: "block" }}
+                  >
+                    {page.name}
+                  </Button>
+                ),
+            )}
           </Box>
           {/* Mobile menu */}
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
@@ -126,11 +141,18 @@ function AppNavbar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleMenuClose}>
-                  <Link href={`/${page.toLowerCase()}`}>{page}</Link>
-                </MenuItem>
-              ))}
+              {pages.map(
+                (page) =>
+                  canAccessPage(page.permission) && (
+                    <MenuItem key={page.name} onClick={handleMenuClose}>
+                      <Link
+                        href={`/${page.name.toLowerCase().replace(" ", "-")}`}
+                      >
+                        {page.name}
+                      </Link>
+                    </MenuItem>
+                  ),
+              )}
             </Menu>
           </Box>
           {/* User menu */}
