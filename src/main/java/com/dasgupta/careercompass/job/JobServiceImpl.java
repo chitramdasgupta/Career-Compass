@@ -71,8 +71,11 @@ public class JobServiceImpl implements JobService {
         log.info("Service getJobById called with id={}", id);
 
         Job job = jobRepository.findById(id).orElseThrow();
+        log.info("The found job has the id: {}", job.getId());
 
+        log.info("The job mapper call to convert the job to DTO is about to be called");
         JobDto dto = jobMapper.toDto(job);
+        log.info("The dto has the id: {}", dto.getId());
         dto.setBookmarked(bookmarkService.isJobBookmarked(userId, id));
 
         return jobRepository.findById(id).map(jobMapper::toDto);

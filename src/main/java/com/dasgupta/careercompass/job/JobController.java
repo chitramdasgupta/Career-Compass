@@ -58,6 +58,7 @@ public class JobController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
+        log.info("Authenticated user information: {}", user.toString());
 
         Optional<JobDto> jobDto = jobService.getJobById(id, user.getId());
         log.info("jobDto={}", jobDto);

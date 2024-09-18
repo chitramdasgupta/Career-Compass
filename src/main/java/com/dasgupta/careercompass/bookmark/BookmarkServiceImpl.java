@@ -30,7 +30,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     public void addBookmark(Integer userId, Integer jobId) {
-        Candidate candidate = candidateRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Candidate candidate = candidateRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Candidate not found"));
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new RuntimeException("Job not found"));
 
         if (!bookmarkRepository.existsByCandidateIdAndJobId(candidate.getId(), job.getId())) {
@@ -40,20 +40,20 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     public void removeBookmark(Integer userId, Integer jobId) {
-        Candidate candidate = candidateRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Candidate candidate = candidateRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Candidate not found"));
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new RuntimeException("Job not found"));
 
         bookmarkRepository.findByCandidateIdAndJobId(candidate.getId(), job.getId()).ifPresent(bookmarkRepository::delete);
     }
 
     public List<JobDto> getBookmarkedJobs(Integer userId) {
-        Candidate candidate = candidateRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Candidate candidate = candidateRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Candidate not found"));
 
         return bookmarkRepository.findByCandidateId(candidate.getId()).stream().map(bookmark -> jobMapper.toDto(bookmark.getJob())).collect(Collectors.toList());
     }
 
     public boolean isJobBookmarked(Integer userId, Integer jobId) {
-        Candidate candidate = candidateRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Candidate candidate = candidateRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Candidate not found"));
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new RuntimeException("Job not found"));
 
         return bookmarkRepository.existsByCandidateIdAndJobId(candidate.getId(), job.getId());
