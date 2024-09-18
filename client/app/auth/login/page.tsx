@@ -91,7 +91,8 @@ export default function Login() {
       </form>
       <Box sx={{ mt: 2, textAlign: "center" }}>
         <Typography variant="body2">
-          Don't have an account? <Link href="/auth/signup">Sign up here</Link>
+          Don&apos;t have an account?{" "}
+          <Link href="/auth/signup">Sign up here</Link>
         </Typography>
       </Box>
       <CustomSnackbar snackbarMessage={snackbarMessage} />

@@ -1,7 +1,8 @@
 import { baseApi } from "@/app/shared/api/baseApi";
-import { JobPostingsResponse } from "./types";
+import { JobPostingsResponse, Job } from "./types";
 
 const USERS_URL = "/users";
+const JOBS_URL = "/jobs";
 
 export const jobPostingsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -12,7 +13,13 @@ export const jobPostingsApi = baseApi.injectEndpoints({
         params: { page, size: 25 },
       }),
     }),
+    postJob: builder.mutation<Job, number>({
+      query: (jobId) => ({
+        url: `${JOBS_URL}/${jobId}/post`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
-export const { useGetJobPostingsQuery } = jobPostingsApi;
+export const { useGetJobPostingsQuery, usePostJobMutation } = jobPostingsApi;

@@ -15,4 +15,5 @@ export interface Job {
   questionnaireId: number;
   company: Company;
   bookmarked: boolean;
+  status: string;
 }
