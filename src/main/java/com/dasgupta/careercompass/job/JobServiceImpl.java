@@ -1,6 +1,11 @@
 package com.dasgupta.careercompass.job;
 
 import com.dasgupta.careercompass.bookmark.BookmarkService;
+import com.dasgupta.careercompass.exception.ResourceNotFoundException;
+import com.dasgupta.careercompass.jobApplication.JobApplication;
+import com.dasgupta.careercompass.jobApplication.JobApplicationDto;
+import com.dasgupta.careercompass.jobApplication.JobApplicationMapper;
+import com.dasgupta.careercompass.jobApplication.JobApplicationRepository;
 import com.dasgupta.careercompass.questionnaire.Questionnaire;
 import com.dasgupta.careercompass.questionnaire.QuestionnaireDto;
 import com.dasgupta.careercompass.questionnaire.QuestionnaireMapper;
@@ -10,18 +15,18 @@ import com.dasgupta.careercompass.questionnaire.question.QuestionMapper;
 import com.dasgupta.careercompass.questionnaire.question.QuestionRepository;
 import com.dasgupta.careercompass.questionnaire.questionnairequestion.QuestionnaireQuestion;
 import com.dasgupta.careercompass.questionnaire.questionnairequestion.QuestionnaireQuestionDto;
+import com.dasgupta.careercompass.user.Role;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -36,12 +41,15 @@ public class JobServiceImpl implements JobService {
     private final QuestionRepository questionRepository;
     private final QuestionMapper questionMapper;
     private final QuestionnaireMapper questionnaireMapper;
+    private final JobApplicationRepository jobApplicationRepository;
+    private final JobApplicationMapper jobApplicationMapper;
 
     @Autowired
     public JobServiceImpl(JobRepository jobRepository, JobMapper jobMapper, BookmarkService bookmarkService,
                           JobCreateMapper jobCreateMapper, LoggedInCompanyJobMapper loggedInCompanyJobMapper,
                           QuestionnaireRepository questionnaireRepository, QuestionnaireMapper questionnaireMapper,
-                          QuestionRepository questionRepository, QuestionMapper questionMapper) {
+                          QuestionRepository questionRepository, QuestionMapper questionMapper,
+                          JobApplicationRepository jobApplicationRepository, JobApplicationMapper jobApplicationMapper) {
         this.jobRepository = jobRepository;
         this.jobMapper = jobMapper;
         this.bookmarkService = bookmarkService;
@@ -51,23 +59,27 @@ public class JobServiceImpl implements JobService {
         this.questionRepository = questionRepository;
         this.questionMapper = questionMapper;
         this.questionnaireMapper = questionnaireMapper;
+        this.jobApplicationRepository = jobApplicationRepository;
+        this.jobApplicationMapper = jobApplicationMapper;
     }
 
     @Override
-    public Page<JobDto> getAllJobs(Pageable pageable, Integer userId) {
+    public Page<JobDto> getAllJobs(Pageable pageable, Integer userId, Role role) {
         Page<Job> jobPage = jobRepository.findAll(pageable);
         log.info("jobMapper for all jobs about to be called");
 
         return jobPage.map(job -> {
             JobDto jobDto = jobMapper.toDto(job);
-            jobDto.setBookmarked(bookmarkService.isJobBookmarked(userId, job.getId()));
+            if (role == Role.ROLE_CANDIDATE) {
+                jobDto.setBookmarked(bookmarkService.isJobBookmarked(userId, job.getId()));
+            }
 
             return jobDto;
         });
     }
 
     @Override
-    public Optional<JobDto> getJobById(int id, Integer userId) {
+    public Optional<JobDto> getJobById(int id, Integer userId, Role role) {
         log.info("Service getJobById called with id={}", id);
 
         Job job = jobRepository.findById(id).orElseThrow();
@@ -76,7 +88,9 @@ public class JobServiceImpl implements JobService {
         log.info("The job mapper call to convert the job to DTO is about to be called");
         JobDto dto = jobMapper.toDto(job);
         log.info("The dto has the id: {}", dto.getId());
-        dto.setBookmarked(bookmarkService.isJobBookmarked(userId, id));
+        if (role == Role.ROLE_CANDIDATE) {
+            dto.setBookmarked(bookmarkService.isJobBookmarked(userId, id));
+        }
 
         return jobRepository.findById(id).map(jobMapper::toDto);
     }
@@ -175,6 +189,19 @@ public class JobServiceImpl implements JobService {
         }
 
         return Optional.of(questionnaireMapper.toDto(job.getQuestionnaire()));
+    }
+
+    @Override
+    public Page<JobApplicationDto> getJobApplications(Pageable pageable, int jobId, int userId) {
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
+
+        if (!Objects.equals(job.getCompany().getUser().getId(), userId)) {
+            throw new AccessDeniedException("You don't have permission to view applications for this job");
+        }
+
+        Page<JobApplication> applications = jobApplicationRepository.findByJobId(jobId, pageable);
+        return applications.map(jobApplicationMapper::toDto);
     }
 
 }

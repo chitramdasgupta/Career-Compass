@@ -3,6 +3,7 @@ package com.dasgupta.careercompass.job;
 import com.dasgupta.careercompass.company.CompanyDto;
 import com.dasgupta.careercompass.company.CompanyService;
 import com.dasgupta.careercompass.constants.Constants;
+import com.dasgupta.careercompass.jobApplication.JobApplicationDto;
 import com.dasgupta.careercompass.questionnaire.QuestionnaireDto;
 import com.dasgupta.careercompass.user.Role;
 import com.dasgupta.careercompass.user.User;
@@ -19,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -46,7 +48,7 @@ public class JobController {
         User user = (User) authentication.getPrincipal();
         log.info("The authenticated user is {}", user);
 
-        Page<JobDto> jobs = jobService.getAllJobs(pageable, user.getId());
+        Page<JobDto> jobs = jobService.getAllJobs(pageable, user.getId(), user.getRole());
         log.info("The jobs are: {}", jobs);
 
         return jobs;
@@ -60,7 +62,7 @@ public class JobController {
         User user = (User) authentication.getPrincipal();
         log.info("Authenticated user information: {}", user.toString());
 
-        Optional<JobDto> jobDto = jobService.getJobById(id, user.getId());
+        Optional<JobDto> jobDto = jobService.getJobById(id, user.getId(), user.getRole());
         log.info("jobDto={}", jobDto);
 
         return jobDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
@@ -115,6 +117,26 @@ public class JobController {
             log.info("Questionnaire not found for jobId={}", jobId);
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/{jobId}/applications")
+    public ResponseEntity<Page<JobApplicationDto>> getJobApplications(
+            @PathVariable int jobId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        log.info("getJobApplications called with jobId={}, page={}, size={}", jobId, page, size);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        if (user.getRole() != Role.ROLE_COMPANY) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<JobApplicationDto> applications = jobService.getJobApplications(pageable, jobId, user.getId());
+
+        return ResponseEntity.ok(applications);
     }
 
     @PostMapping("/{jobId}/post")

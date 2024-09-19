@@ -29,21 +29,48 @@ export const jobsApi = baseApi.injectEndpoints({
     createJob: builder.mutation<Job, Partial<Job>>({
       query: (newJob) => ({
         url: JOBS_URL,
-        method: 'POST',
+        method: "POST",
         body: newJob,
       }),
     }),
     createQuestionnaire: builder.mutation<
-    any,
-    { jobId: number; questionnaire: any }
-  >({
-    query: ({ jobId, questionnaire }) => ({
-      url: `jobs/${jobId}/questionnaire`,
-      method: "POST",
-      body: questionnaire,
+      any,
+      { jobId: number; questionnaire: any }
+    >({
+      query: ({ jobId, questionnaire }) => ({
+        url: `jobs/${jobId}/questionnaire`,
+        method: "POST",
+        body: questionnaire,
+      }),
     }),
-  }),
+
+    getJobApplications: builder.query<
+      {
+        content: any[];
+        last: boolean;
+      },
+      { jobId: number; page: number }
+    >({
+      query: ({ jobId, page }) => ({
+        url: `${JOBS_URL}/${jobId}/applications`,
+        params: { page, size: 10 },
+      }),
+      serializeQueryArgs: ({ endpointName, queryArgs }) =>
+        `${endpointName}-${queryArgs.jobId}`,
+      merge: (currentCache, newItems) => ({
+        ...newItems,
+        content: [...(currentCache?.content || []), ...newItems.content],
+      }),
+      forceRefetch: ({ currentArg, previousArg }) =>
+        currentArg?.page !== previousArg?.page,
+    }),
   }),
 });
 
-export const { useGetJobsQuery, useGetJobQuery, useCreateJobMutation, useCreateQuestionnaireMutation } = jobsApi;
+export const {
+  useGetJobsQuery,
+  useGetJobQuery,
+  useCreateJobMutation,
+  useCreateQuestionnaireMutation,
+  useGetJobApplicationsQuery,
+} = jobsApi;
