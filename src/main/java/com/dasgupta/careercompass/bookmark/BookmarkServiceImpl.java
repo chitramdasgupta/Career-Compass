@@ -56,7 +56,12 @@ public class BookmarkServiceImpl implements BookmarkService {
 
         Page<Bookmark> bookmarks = bookmarkRepository.findByCandidateId(candidate.getId(), pageable);
 
-        return bookmarks.map(bookmark -> jobMapper.toDto(bookmark.getJob()));
+        return bookmarks.map(bookmark -> {
+            JobDto jobDto = jobMapper.toDto(bookmark.getJob());
+            jobDto.setBookmarked(true);
+
+            return jobDto;
+        });
     }
 
     public boolean isJobBookmarked(Integer userId, Integer jobId) {
