@@ -3,6 +3,8 @@ package com.dasgupta.careercompass.jobApplication;
 import com.dasgupta.careercompass.candidate.Candidate;
 import com.dasgupta.careercompass.candidate.CandidateRepository;
 import com.dasgupta.careercompass.job.Job;
+import com.dasgupta.careercompass.job.JobDto;
+import com.dasgupta.careercompass.job.JobMapper;
 import com.dasgupta.careercompass.job.JobRepository;
 import com.dasgupta.careercompass.questionnaire.answer.Answer;
 import com.dasgupta.careercompass.questionnaire.answer.AnswerRepository;
@@ -13,6 +15,8 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,18 +29,21 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final CandidateRepository candidateRepository;
+    private final JobMapper jobMapper;
 
     @Autowired
     public JobApplicationServiceImpl(JobApplicationRepository jobApplicationRepository,
                                      JobRepository jobRepository,
                                      QuestionRepository questionRepository,
                                      AnswerRepository answerRepository,
-                                     CandidateRepository candidateRepository) {
+                                     CandidateRepository candidateRepository,
+                                     JobMapper jobMapper) {
         this.jobApplicationRepository = jobApplicationRepository;
         this.jobRepository = jobRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
         this.candidateRepository = candidateRepository;
+        this.jobMapper = jobMapper;
     }
 
     @Override
@@ -77,5 +84,19 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         });
 
         return jobApplication;
+    }
+
+    @Override
+    public Page<JobDto> getCandidateAppliedJobs(Pageable pageable, Integer userId) {
+        log.info("Fetching applied jobs for user: {}", userId);
+
+        Candidate candidate = candidateRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Candidate not found for user"));
+
+        Page<Job> appliedJobs = jobApplicationRepository.findByCandidateId(candidate.getId(), pageable);
+
+        log.info("Found {} applied jobs for candidate", appliedJobs.getTotalElements());
+
+        return appliedJobs.map(jobMapper::toDto);
     }
 }

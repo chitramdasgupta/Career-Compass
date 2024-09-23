@@ -15,13 +15,18 @@ import {
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { useGetBookmarkedJobsQuery } from "@/app/shared/api/bookmarksApi";
+import { useGetSubmittedJobApplicationsQuery } from "@/app/shared/api/jobApplicationsApi";
 import Link from "next/link";
 import { SkeletonList } from "../posts/components/PostSkeleton/skeletonList";
 
 const Dashboard: React.FC = () => {
-  const { data, isLoading } = useGetBookmarkedJobsQuery(0);
-  const bookmarkedJobs = data?.content || [];
-  const submittedApplications = [];
+  const { data: bookmarkedData, isLoading: isBookmarkedLoading } =
+    useGetBookmarkedJobsQuery(0);
+  const { data: submittedData, isLoading: isSubmittedLoading } =
+    useGetSubmittedJobApplicationsQuery(0);
+
+  const bookmarkedJobs = bookmarkedData?.content || [];
+  const submittedApplications = submittedData?.content || [];
 
   return (
     <Container maxWidth="lg" style={{ marginTop: "20px" }}>
@@ -35,7 +40,7 @@ const Dashboard: React.FC = () => {
               Bookmarked Jobs
             </Typography>
             <List>
-              {isLoading ? (
+              {isBookmarkedLoading ? (
                 <SkeletonList count={3} />
               ) : (
                 <>
@@ -74,30 +79,35 @@ const Dashboard: React.FC = () => {
               Submitted Job Applications
             </Typography>
             <List>
-              {submittedApplications.slice(0, 3).map((application) => (
-                <ListItem key={application.id}>
-                  <ListItemIcon>
-                    <AssignmentIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={application.title}
-                    secondary={`Status: ${application.status}`}
-                  />
-                </ListItem>
-              ))}
-              {submittedApplications.length > 3 && (
-                <ListItem>
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() =>
-                      alert("Navigate to all submitted applications")
-                    }
-                    style={{ justifyContent: "flex-start" }}
-                  >
-                    See More ({submittedApplications.length - 3})
-                  </Button>
-                </ListItem>
+              {isSubmittedLoading ? (
+                <SkeletonList count={3} />
+              ) : (
+                <>
+                  {submittedApplications.slice(0, 3).map((job) => (
+                    <ListItem key={job.id}>
+                      <ListItemIcon>
+                        <AssignmentIcon />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={job.title}
+                        secondary={job.company.name}
+                      />
+                    </ListItem>
+                  ))}
+                  {submittedApplications.length > 0 && (
+                    <ListItem>
+                      <Link href="/dashboard/submitted-applications" passHref>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          style={{ justifyContent: "flex-start" }}
+                        >
+                          See All
+                        </Button>
+                      </Link>
+                    </ListItem>
+                  )}
+                </>
               )}
             </List>
           </Paper>

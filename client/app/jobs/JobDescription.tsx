@@ -15,7 +15,10 @@ interface JobDescriptionProps {
   job: Job | null;
 }
 
-export const JobDescription: React.FC<JobDescriptionProps> = ({ job }) => {
+export const JobDescription: React.FC<JobDescriptionProps> = ({
+  job,
+  isSubmitted = false,
+}) => {
   const [addBookmark, { isLoading: isAddingBookmark }] =
     useAddBookmarkMutation();
   const [removeBookmark, { isLoading: isRemovingBookmark }] =
@@ -52,28 +55,30 @@ export const JobDescription: React.FC<JobDescriptionProps> = ({ job }) => {
           },
         }}
       />
-      <CardActions sx={{ padding: "0 16px 16px 16px" }}>
-        <Link href={`/jobs/${job.id}/questionnaire`} passHref>
+      {!isSubmitted && (
+        <CardActions sx={{ padding: "0 16px 16px 16px" }}>
+          <Link href={`/jobs/${job.id}/questionnaire`} passHref>
+            <Button
+              size="small"
+              variant="contained"
+              endIcon={<LaunchIcon />}
+              component="a"
+            >
+              Apply Now
+            </Button>
+          </Link>
           <Button
             size="small"
             variant="contained"
-            endIcon={<LaunchIcon />}
-            component="a"
+            color={job.bookmarked ? "warning" : "secondary"}
+            endIcon={<BookmarkAddOutlined />}
+            onClick={handleBookmarkToggle}
+            disabled={isAddingBookmark || isRemovingBookmark}
           >
-            Apply Now
+            {job.bookmarked ? "Bookmarked" : "Bookmark"}
           </Button>
-        </Link>
-        <Button
-          size="small"
-          variant="contained"
-          color={job.bookmarked ? "warning" : "secondary"}
-          endIcon={<BookmarkAddOutlined />}
-          onClick={handleBookmarkToggle}
-          disabled={isAddingBookmark || isRemovingBookmark}
-        >
-          {job.bookmarked ? "Bookmarked" : "Bookmark"}
-        </Button>
-      </CardActions>
+        </CardActions>
+      )}
       <CardContent>
         <p>{job.description}</p>
       </CardContent>
