@@ -6,6 +6,9 @@ import com.dasgupta.careercompass.job.Job;
 import com.dasgupta.careercompass.job.JobDto;
 import com.dasgupta.careercompass.job.JobMapper;
 import com.dasgupta.careercompass.job.JobRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,10 +49,14 @@ public class BookmarkServiceImpl implements BookmarkService {
         bookmarkRepository.findByCandidateIdAndJobId(candidate.getId(), job.getId()).ifPresent(bookmarkRepository::delete);
     }
 
-    public List<JobDto> getBookmarkedJobs(Integer userId) {
-        Candidate candidate = candidateRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Candidate not found"));
+    @Override
+    public Page<JobDto> getBookmarkedJobs(Integer userId, Pageable pageable) {
+        Candidate candidate = candidateRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Candidate not found"));
 
-        return bookmarkRepository.findByCandidateId(candidate.getId()).stream().map(bookmark -> jobMapper.toDto(bookmark.getJob())).collect(Collectors.toList());
+        Page<Bookmark> bookmarks = bookmarkRepository.findByCandidateId(candidate.getId(), pageable);
+
+        return bookmarks.map(bookmark -> jobMapper.toDto(bookmark.getJob()));
     }
 
     public boolean isJobBookmarked(Integer userId, Integer jobId) {
