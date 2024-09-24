@@ -36,6 +36,7 @@ public class Questionnaire {
     private Job job;
 
     // Boiler plate
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

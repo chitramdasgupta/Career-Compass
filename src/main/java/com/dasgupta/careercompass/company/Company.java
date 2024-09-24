@@ -19,22 +19,27 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 public class Company {
-    @OneToMany(mappedBy = "company")
-    @ToString.Exclude
-    List<CompanyReview> reviews;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @OneToMany(mappedBy = "company")
+    @ToString.Exclude
+    List<CompanyReview> reviews;
+
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
     @NotBlank(message = "Name cannot be blank")
     @Column(nullable = false)
     private String name;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 
     // Boiler plate
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
