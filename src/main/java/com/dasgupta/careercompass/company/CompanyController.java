@@ -1,6 +1,7 @@
 package com.dasgupta.careercompass.company;
 
 import com.dasgupta.careercompass.company.companyReview.CompanyReviewDto;
+import com.dasgupta.careercompass.company.companyReview.CompanyReviewService;
 import com.dasgupta.careercompass.company.companyReview.ReviewDto;
 import com.dasgupta.careercompass.constants.Constants;
 import com.dasgupta.careercompass.job.JobDto;
@@ -24,16 +25,20 @@ import java.util.Optional;
 public class CompanyController {
     private static final Logger log = LoggerFactory.getLogger(CompanyController.class);
     private final CompanyService companyService;
+    private final CompanyReviewService companyReviewService;
     private final JobService jobService;
 
     @Autowired
-    public CompanyController(CompanyService companyService, JobService jobService) {
+    public CompanyController(CompanyService companyService, JobService jobService,
+                             CompanyReviewService companyReviewService) {
         this.companyService = companyService;
         this.jobService = jobService;
+        this.companyReviewService = companyReviewService;
     }
 
     @GetMapping("")
-    public Page<CompanyDto> getAllCompanies(@RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_NUMBER) int page, @RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_SIZE) int size) {
+    public Page<CompanyDto> getAllCompanies(@RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_NUMBER) int page,
+                                            @RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_SIZE) int size) {
         log.info("getAllCompanies called with page={}, size={}", page, size);
         Pageable pageable = PageRequest.of(page, size);
 
@@ -43,15 +48,11 @@ public class CompanyController {
     @GetMapping("/{id}")
     public ResponseEntity<CompanyDto> getCompanyById(@PathVariable int id) {
         log.info("Fetching company with id: {}", id);
-        Optional<CompanyDto> company = companyService.getCompanyById(id);
 
-        if (company.isPresent()) {
-            log.info("Company found: {}", company.get());
-            return ResponseEntity.ok(company.get());
-        } else {
-            log.warn("Company not found with id: {}", id);
-            return ResponseEntity.notFound().build();
-        }
+        CompanyDto company = companyService.getCompanyById(id);
+        log.info("Company found: {}", company);
+
+        return ResponseEntity.ok(company);
     }
 
     @PostMapping("/{id}/reviews")
@@ -59,8 +60,9 @@ public class CompanyController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        Optional<CompanyReviewDto> resultReviewDto = companyService.createReview(id, reviewDto.getRating(), user);
-        return resultReviewDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        CompanyReviewDto resultReviewDto = companyReviewService.createReview(id, user.getId(), reviewDto.getRating());
+
+        return ResponseEntity.ok(resultReviewDto);
     }
 
     @GetMapping("/{id}/jobs")

@@ -16,6 +16,7 @@ import com.dasgupta.careercompass.questionnaire.question.QuestionRepository;
 import com.dasgupta.careercompass.questionnaire.questionnairequestion.QuestionnaireQuestion;
 import com.dasgupta.careercompass.questionnaire.questionnairequestion.QuestionnaireQuestionDto;
 import com.dasgupta.careercompass.user.Role;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -194,7 +195,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public Page<JobApplicationDto> getJobApplications(Pageable pageable, int jobId, int userId) {
         Job job = jobRepository.findById(jobId)
-                .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Job not found"));
 
         if (!Objects.equals(job.getCompany().getUser().getId(), userId)) {
             throw new AccessDeniedException("You don't have permission to view applications for this job");

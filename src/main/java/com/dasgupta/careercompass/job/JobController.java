@@ -73,14 +73,13 @@ public class JobController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        CompanyDto company = companyService.getCompanyByUserId(user.getId()).orElseThrow();
         if (user.getRole() != Role.ROLE_COMPANY) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
+        CompanyDto company = companyService.getCompanyByUserId(user.getId());
         jobDto.setCompanyId(company.getId());
         jobDto.setStatus(JobStatus.QUESTIONNAIRE_PENDING);
-
         JobDto createdJob = jobService.createJob(jobDto, company.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdJob);

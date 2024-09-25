@@ -38,7 +38,8 @@ public class UserController {
     private final JobService jobService;
 
     @Autowired
-    public UserController(UserService userService, CandidateService candidateService, CompanyService companyService, JobService jobService) {
+    public UserController(UserService userService, CandidateService candidateService, CompanyService companyService,
+                          JobService jobService) {
         this.userService = userService;
         this.candidateService = candidateService;
         this.companyService = companyService;
@@ -61,8 +62,7 @@ public class UserController {
                     yield ResponseEntity.ok(candidate);
                 }
                 case Role.ROLE_COMPANY -> {
-                    CompanyDto company = companyService.getCompanyByUserId(user.getId())
-                            .orElseThrow(() -> new RuntimeException("Company not found"));
+                    CompanyDto company = companyService.getCompanyByUserId(user.getId());
                     yield ResponseEntity.ok(company);
                 }
                 default -> ResponseEntity.ok(userDto.get());
@@ -89,16 +89,9 @@ public class UserController {
     ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-        Optional<CompanyDto> company = companyService.getCompanyByUserId(user.getId());
+        CompanyDto company = companyService.getCompanyByUserId(user.getId());
 
-        if (company.isEmpty()) {
-            log.info("No company found for the authenticated user");
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("No company associated with the authenticated user");
-        }
-
-        if (!Objects.equals(user.getId(), company.get().getUser().getId())) {
+        if (!Objects.equals(user.getId(), company.getUser().getId())) {
             log.info("The company whose jobs are requested is not authenticated");
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
@@ -106,9 +99,8 @@ public class UserController {
         }
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<LoggedInCompanyJobDto> jobs = jobService.getLoggedInCompanyJobs(pageable, company.get().getId());
+        Page<LoggedInCompanyJobDto> jobs = jobService.getLoggedInCompanyJobs(pageable, company.getId());
 
         return ResponseEntity.ok(jobs);
     }
-
 }
