@@ -11,4 +11,6 @@ public interface CompanyService {
     CompanyDto getCompanyById(Integer id);
 
     CompanyDto getCompanyByUserId(Integer userId);
+
+    CompanyDto createCompany(User user, String name);
 }

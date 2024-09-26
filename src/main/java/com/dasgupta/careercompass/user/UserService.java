@@ -1,8 +1,8 @@
 package com.dasgupta.careercompass.user;
 
 
-import java.util.Optional;
-
 public interface UserService {
-    Optional<UserDto> getUserByEmail(String email);
+    UserDto getUserByEmail(String email);
+
+    UserDto createUser(String email, String password, Role role, String name);
 }

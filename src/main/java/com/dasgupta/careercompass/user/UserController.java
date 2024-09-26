@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -52,25 +51,20 @@ public class UserController {
         User user = (User) authentication.getPrincipal();
         log.info("The user is: {}", user.getEmail());
 
-        Optional<UserDto> userDto = userService.getUserByEmail(user.getEmail());
-        if (userDto.isPresent()) {
-            log.info("User found: {}", userDto.get().getEmail());
-            return switch (userDto.get().getRole()) {
-                case Role.ROLE_CANDIDATE -> {
-                    CandidateDto candidate = candidateService.getCandidateByUserId(user.getId())
-                            .orElseThrow(() -> new RuntimeException("Candidate not found"));
-                    yield ResponseEntity.ok(candidate);
-                }
-                case Role.ROLE_COMPANY -> {
-                    CompanyDto company = companyService.getCompanyByUserId(user.getId());
-                    yield ResponseEntity.ok(company);
-                }
-                default -> ResponseEntity.ok(userDto.get());
-            };
-        } else {
-            log.info("User not found: {}", user.getEmail());
-            return ResponseEntity.notFound().build();
-        }
+        UserDto userDto = userService.getUserByEmail(user.getEmail());
+        log.info("User found: {}", userDto.getEmail());
+
+        return switch (userDto.getRole()) {
+            case Role.ROLE_CANDIDATE -> {
+                CandidateDto candidate = candidateService.getCandidateByUserId(user.getId());
+                yield ResponseEntity.ok(candidate);
+            }
+            case Role.ROLE_COMPANY -> {
+                CompanyDto company = companyService.getCompanyByUserId(user.getId());
+                yield ResponseEntity.ok(company);
+            }
+            default -> ResponseEntity.ok(userDto);
+        };
     }
 
     @GetMapping("/roles")

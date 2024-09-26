@@ -1,7 +1,9 @@
 package com.dasgupta.careercompass.candidate;
 
-import java.util.Optional;
+import com.dasgupta.careercompass.user.User;
 
 public interface CandidateService {
-    Optional<CandidateDto> getCandidateByUserId(Integer userId);
+    CandidateDto getCandidateByUserId(Integer userId);
+
+    CandidateDto createCandidate(User user);
 }

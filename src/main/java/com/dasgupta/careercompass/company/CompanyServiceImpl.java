@@ -1,5 +1,6 @@
 package com.dasgupta.careercompass.company;
 
+import com.dasgupta.careercompass.user.User;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -50,5 +51,19 @@ public class CompanyServiceImpl implements CompanyService {
         return companyRepository.findByUserId(userId)
                 .map(companyMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Company not found for user id: " + userId));
+    }
+
+    @Override
+    public CompanyDto createCompany(User user, String name) {
+        log.info("Attempting to create a company for user: {}", user.getEmail());
+
+        Company company = new Company()
+                .setUser(user)
+                .setName(name);
+
+        Company savedCompany = companyRepository.save(company);
+
+        log.info("Company created: {}", savedCompany);
+        return companyMapper.toDto(savedCompany);
     }
 }

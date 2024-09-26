@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Objects;
 
 @Entity
 @Getter
+@Accessors(chain = true)
 @Setter
 @ToString
 @RequiredArgsConstructor
