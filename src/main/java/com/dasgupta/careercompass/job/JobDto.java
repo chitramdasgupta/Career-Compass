@@ -22,7 +22,6 @@ public class JobDto {
     private BigDecimal minimumSalary;
     private BigDecimal maximumSalary;
     private String currency;
-    private QuestionnaireDto questionnaire;
     private boolean isBookmarked;
     private JobStatus status;
 }

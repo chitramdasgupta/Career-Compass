@@ -1,5 +1,6 @@
 package com.dasgupta.careercompass.job;
 
+import com.dasgupta.careercompass.company.CompanyDto;
 import com.dasgupta.careercompass.user.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

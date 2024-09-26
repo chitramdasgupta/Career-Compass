@@ -74,8 +74,9 @@ public class BookmarkServiceImpl implements BookmarkService {
         log.info("Is job bookmarked called with userId: {}, and jobId: {}", userId, jobId);
 
         CandidateDto candidate = candidateService.getCandidateByUserId(userId);
-        JobDto job = jobService.getJobById(jobId, userId);
 
-        return bookmarkRepository.existsByCandidateIdAndJobId(candidate.getId(), job.getId());
+        log.info("The candidate with id: {} is found", candidate.getId());
+        return bookmarkRepository.existsByCandidateIdAndJobId(candidate.getId(), jobId);
     }
+
 }

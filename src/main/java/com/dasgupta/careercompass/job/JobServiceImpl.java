@@ -56,7 +56,10 @@ public class JobServiceImpl implements JobService {
                 .map(foundJob -> {
                     log.info("The found job has the id: {}", foundJob.getId());
 
-                    return jobMapper.toDto(foundJob, bookmarkService.isJobBookmarked(userId, foundJob.getId()));
+                    boolean jobBookmarked = bookmarkService.isJobBookmarked(userId, foundJob.getId());
+
+                    log.info("Job bookmarked: {}", jobBookmarked);
+                    return jobMapper.toDto(foundJob, jobBookmarked);
                 })
                 .orElseThrow(() -> {
                     log.info("Job not found");

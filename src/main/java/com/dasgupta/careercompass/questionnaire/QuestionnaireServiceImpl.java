@@ -1,5 +1,7 @@
 package com.dasgupta.careercompass.questionnaire;
 
+import com.dasgupta.careercompass.company.CompanyDto;
+import com.dasgupta.careercompass.company.CompanyService;
 import com.dasgupta.careercompass.job.*;
 import com.dasgupta.careercompass.questionnaire.question.Question;
 import com.dasgupta.careercompass.questionnaire.question.QuestionService;
@@ -25,15 +27,18 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     private final JobService jobService;
     private final JobMapper jobMapper;
     private final QuestionService questionService;
+    private final QuestionnaireMapper questionnaireMapper;
 
     public QuestionnaireServiceImpl(QuestionnaireRepository questionnaireRepository,
                                     QuestionnaireQuestionMapper questionnaireQuestionMapper, JobService jobService,
-                                    JobMapper jobMapper, QuestionService questionService) {
+                                    JobMapper jobMapper, QuestionService questionService,
+                                    QuestionnaireMapper questionnaireMapper) {
         this.questionnaireRepository = questionnaireRepository;
         this.questionnaireQuestionMapper = questionnaireQuestionMapper;
         this.jobService = jobService;
         this.jobMapper = jobMapper;
         this.questionService = questionService;
+        this.questionnaireMapper = questionnaireMapper;
     }
 
     @Override
@@ -70,13 +75,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public QuestionnaireDto getJobQuestionnaire(int jobId, Integer userId) {
         log.info("get job questionnaire called with jobId: {}, and userId: {}", jobId, userId);
 
-        JobDto job = jobService.getJobById(jobId, userId);
-
-        if (!job.getCompany().getUser().getId().equals(userId)) {
-            throw new AccessDeniedException("Unauthorized access");
-        }
-
-        return job.getQuestionnaire();
+        return  questionnaireMapper.toDto(questionnaireRepository.getQuestionnaireByJobId(jobId));
     }
 
     private void createAndSaveQuestionnaire(QuestionnaireDto questionnaireDto, Job job) {
