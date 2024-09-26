@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.jobApplication;
+package com.dasgupta.careercompass.jobapplication;
 
 import com.dasgupta.careercompass.job.JobDto;
 import com.dasgupta.careercompass.user.User;

@@ -2,7 +2,7 @@ package com.dasgupta.careercompass.questionnaire.answer;
 
 import com.dasgupta.careercompass.candidate.Candidate;
 import com.dasgupta.careercompass.job.Job;
-import com.dasgupta.careercompass.jobApplication.JobApplication;
+import com.dasgupta.careercompass.jobapplication.JobApplication;
 import com.dasgupta.careercompass.questionnaire.question.Question;
 import jakarta.persistence.*;
 import lombok.Getter;

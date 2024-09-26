@@ -1,12 +1,9 @@
-package com.dasgupta.careercompass.jobApplication;
+package com.dasgupta.careercompass.jobapplication;
 
 import com.dasgupta.careercompass.bookmark.BookmarkService;
 import com.dasgupta.careercompass.candidate.*;
 import com.dasgupta.careercompass.job.*;
-import com.dasgupta.careercompass.questionnaire.answer.Answer;
-import com.dasgupta.careercompass.questionnaire.answer.AnswerRepository;
 import com.dasgupta.careercompass.questionnaire.answer.AnswerService;
-import com.dasgupta.careercompass.questionnaire.question.*;
 import com.dasgupta.careercompass.user.User;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;

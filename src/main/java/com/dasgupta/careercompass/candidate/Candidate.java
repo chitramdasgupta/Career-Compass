@@ -3,7 +3,7 @@ package com.dasgupta.careercompass.candidate;
 import com.dasgupta.careercompass.bookmark.Bookmark;
 import com.dasgupta.careercompass.company.companyReview.CompanyReview;
 import com.dasgupta.careercompass.job.Job;
-import com.dasgupta.careercompass.jobApplication.JobApplication;
+import com.dasgupta.careercompass.jobapplication.JobApplication;
 import com.dasgupta.careercompass.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;

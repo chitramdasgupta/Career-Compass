@@ -2,7 +2,7 @@ package com.dasgupta.careercompass.job;
 
 import com.dasgupta.careercompass.bookmark.Bookmark;
 import com.dasgupta.careercompass.company.Company;
-import com.dasgupta.careercompass.jobApplication.JobApplication;
+import com.dasgupta.careercompass.jobapplication.JobApplication;
 import com.dasgupta.careercompass.questionnaire.Questionnaire;
 import com.neovisionaries.i18n.CountryCode;
 import com.neovisionaries.i18n.CurrencyCode;

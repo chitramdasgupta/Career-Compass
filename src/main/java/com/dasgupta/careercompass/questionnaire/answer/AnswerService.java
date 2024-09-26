@@ -1,7 +1,7 @@
 package com.dasgupta.careercompass.questionnaire.answer;
 
 import com.dasgupta.careercompass.candidate.CandidateDto;
-import com.dasgupta.careercompass.jobApplication.JobApplication;
+import com.dasgupta.careercompass.jobapplication.JobApplication;
 
 import java.util.Map;
 

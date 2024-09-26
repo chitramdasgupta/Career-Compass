@@ -1,4 +1,4 @@
-package com.dasgupta.careercompass.jobApplication;
+package com.dasgupta.careercompass.jobapplication;
 
 import com.dasgupta.careercompass.candidate.CandidateMapper;
 import com.dasgupta.careercompass.job.JobMapper;

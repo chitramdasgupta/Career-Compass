@@ -2,8 +2,7 @@ package com.dasgupta.careercompass.questionnaire.answer;
 
 import com.dasgupta.careercompass.candidate.CandidateDto;
 import com.dasgupta.careercompass.candidate.CandidateMapper;
-import com.dasgupta.careercompass.config.JwtAuthenticationFilter;
-import com.dasgupta.careercompass.jobApplication.JobApplication;
+import com.dasgupta.careercompass.jobapplication.JobApplication;
 import com.dasgupta.careercompass.questionnaire.question.QuestionDto;
 import com.dasgupta.careercompass.questionnaire.question.QuestionMapper;
 import com.dasgupta.careercompass.questionnaire.question.QuestionService;
