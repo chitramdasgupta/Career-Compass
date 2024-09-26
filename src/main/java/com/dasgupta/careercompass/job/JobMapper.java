@@ -9,8 +9,8 @@ import org.mapstruct.Mapping;
 public interface JobMapper {
     @Mapping(target = "company", source = "company")
     @Mapping(target = "questionnaire", source = "questionnaire")
-    @Mapping(target = "bookmarked", ignore = true)
-    JobDto toDto(Job job);
+    @Mapping(target = "isBookmarked", expression = "java(isBookmarked)")
+    JobDto toDto(Job job, boolean isBookmarked);
 
     @Mapping(target = "jobApplications", ignore = true)
     @Mapping(target = "bookmarks", ignore = true)

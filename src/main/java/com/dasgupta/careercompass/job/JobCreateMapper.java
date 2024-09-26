@@ -12,6 +12,7 @@ public interface JobCreateMapper {
     @Mapping(target = "company", source = "companyId")
     @Mapping(target = "jobApplications", ignore = true)
     @Mapping(target = "bookmarks", ignore = true)
+    @Mapping(target = "status", constant = "QUESTIONNAIRE_PENDING")
     Job toEntity(JobCreateRequestDto jobCreateRequestDto);
 
     default Company map(Integer companyId) {

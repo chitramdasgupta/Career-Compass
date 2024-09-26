@@ -1,5 +1,6 @@
 package com.dasgupta.careercompass.jobApplication;
 
+import com.dasgupta.careercompass.bookmark.BookmarkService;
 import com.dasgupta.careercompass.candidate.Candidate;
 import com.dasgupta.careercompass.candidate.CandidateRepository;
 import com.dasgupta.careercompass.job.Job;
@@ -11,13 +12,17 @@ import com.dasgupta.careercompass.questionnaire.answer.AnswerRepository;
 import com.dasgupta.careercompass.questionnaire.question.Question;
 import com.dasgupta.careercompass.questionnaire.question.QuestionRepository;
 import com.dasgupta.careercompass.user.User;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -30,20 +35,37 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private final AnswerRepository answerRepository;
     private final CandidateRepository candidateRepository;
     private final JobMapper jobMapper;
+    private final JobApplicationMapper jobApplicationMapper;
+    private final BookmarkService bookmarkService;
 
-    @Autowired
     public JobApplicationServiceImpl(JobApplicationRepository jobApplicationRepository,
                                      JobRepository jobRepository,
                                      QuestionRepository questionRepository,
                                      AnswerRepository answerRepository,
                                      CandidateRepository candidateRepository,
-                                     JobMapper jobMapper) {
+                                     JobMapper jobMapper, JobApplicationMapper jobApplicationMapper,
+                                     BookmarkService bookmarkService) {
         this.jobApplicationRepository = jobApplicationRepository;
         this.jobRepository = jobRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
         this.candidateRepository = candidateRepository;
         this.jobMapper = jobMapper;
+        this.jobApplicationMapper = jobApplicationMapper;
+        this.bookmarkService = bookmarkService;
+    }
+
+    @Override
+    public Page<JobApplicationDto> getJobApplications(Pageable pageable, int jobId, int userId) {
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new EntityNotFoundException("Job not found"));
+
+        if (!Objects.equals(job.getCompany().getUser().getId(), userId)) {
+            throw new AccessDeniedException("You don't have permission to view applications for this job");
+        }
+
+        Page<JobApplication> applications = jobApplicationRepository.findByJobId(jobId, pageable);
+        return applications.map(jobApplicationMapper::toDto);
     }
 
     @Override
@@ -96,7 +118,6 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         Page<Job> appliedJobs = jobApplicationRepository.findByCandidateId(candidate.getId(), pageable);
 
         log.info("Found {} applied jobs for candidate", appliedJobs.getTotalElements());
-
-        return appliedJobs.map(jobMapper::toDto);
+        return appliedJobs.map(job -> jobMapper.toDto(job, bookmarkService.isJobBookmarked(userId, job.getId())));
     }
 }

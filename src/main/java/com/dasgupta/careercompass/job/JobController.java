@@ -4,7 +4,9 @@ import com.dasgupta.careercompass.company.CompanyDto;
 import com.dasgupta.careercompass.company.CompanyService;
 import com.dasgupta.careercompass.constants.Constants;
 import com.dasgupta.careercompass.jobApplication.JobApplicationDto;
+import com.dasgupta.careercompass.jobApplication.JobApplicationService;
 import com.dasgupta.careercompass.questionnaire.QuestionnaireDto;
+import com.dasgupta.careercompass.questionnaire.QuestionnaireService;
 import com.dasgupta.careercompass.user.Role;
 import com.dasgupta.careercompass.user.User;
 import jakarta.validation.Valid;
@@ -20,9 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("jobs")
@@ -31,16 +31,22 @@ public class JobController {
     private final JobService jobService;
     private final CompanyService companyService;
     private final JobRepository jobRepository;
+    private final QuestionnaireService questionnaireService;
+    private final JobApplicationService jobApplicationService;
 
     @Autowired
-    public JobController(JobService jobService, CompanyService companyService, JobRepository jobRepository) {
+    public JobController(JobService jobService, CompanyService companyService, JobRepository jobRepository,
+                         QuestionnaireService questionnaireService, JobApplicationService jobApplicationService) {
         this.jobService = jobService;
         this.companyService = companyService;
         this.jobRepository = jobRepository;
+        this.questionnaireService = questionnaireService;
+        this.jobApplicationService = jobApplicationService;
     }
 
     @GetMapping("")
-    public Page<JobDto> getAllJobs(@RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_NUMBER) int page, @RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_SIZE) int size) {
+    public Page<JobDto> getAllJobs(@RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_NUMBER) int page,
+                                   @RequestParam(defaultValue = "" + Constants.DEFAULT_PAGE_SIZE) int size) {
         log.info("getAllJobs called with page={}, size={}", page, size);
         Pageable pageable = PageRequest.of(page, size);
 
@@ -62,10 +68,10 @@ public class JobController {
         User user = (User) authentication.getPrincipal();
         log.info("Authenticated user information: {}", user.toString());
 
-        Optional<JobDto> jobDto = jobService.getJobById(id, user.getId(), user.getRole());
-        log.info("jobDto={}", jobDto);
+        JobDto jobDto = jobService.getJobById(id, user.getId());
 
-        return jobDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        log.info("jobDto={}", jobDto);
+        return ResponseEntity.ok(jobDto);
     }
 
     @PostMapping("")
@@ -96,7 +102,7 @@ public class JobController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        JobDto updatedJob = jobService.createQuestionnaireForJob(jobId, questionnaireDto, user.getId());
+        JobDto updatedJob = questionnaireService.createQuestionnaireForJob(jobId, questionnaireDto, user.getId());
         return ResponseEntity.ok(updatedJob);
     }
 
@@ -107,15 +113,10 @@ public class JobController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        Optional<QuestionnaireDto> questionnaireDto = jobService.getJobQuestionnaire(jobId, user.getId());
+        QuestionnaireDto questionnaireDto = questionnaireService.getJobQuestionnaire(jobId, user.getId());
 
-        if (questionnaireDto.isPresent()) {
-            log.info("Questionnaire found for jobId={}", jobId);
-            return ResponseEntity.ok(questionnaireDto.get());
-        } else {
-            log.info("Questionnaire not found for jobId={}", jobId);
-            return ResponseEntity.notFound().build();
-        }
+        log.info("Questionnaire found for jobId={}", jobId);
+        return ResponseEntity.ok(questionnaireDto);
     }
 
     @GetMapping("/{jobId}/applications")
@@ -133,7 +134,7 @@ public class JobController {
         }
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<JobApplicationDto> applications = jobService.getJobApplications(pageable, jobId, user.getId());
+        Page<JobApplicationDto> applications = jobApplicationService.getJobApplications(pageable, jobId, user.getId());
 
         return ResponseEntity.ok(applications);
     }
