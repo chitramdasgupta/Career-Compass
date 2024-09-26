@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class CompanyServiceImpl implements CompanyService {
     private static final Logger log = LoggerFactory.getLogger(CompanyServiceImpl.class);
+
     private final CompanyRepository companyRepository;
     private final CompanyMapper companyMapper;
 

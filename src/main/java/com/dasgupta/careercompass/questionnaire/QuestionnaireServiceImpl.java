@@ -2,20 +2,15 @@ package com.dasgupta.careercompass.questionnaire;
 
 import com.dasgupta.careercompass.job.*;
 import com.dasgupta.careercompass.questionnaire.question.Question;
-import com.dasgupta.careercompass.questionnaire.question.QuestionMapper;
-import com.dasgupta.careercompass.questionnaire.question.QuestionRepository;
 import com.dasgupta.careercompass.questionnaire.question.QuestionService;
 import com.dasgupta.careercompass.questionnaire.questionnairequestion.QuestionnaireQuestion;
 import com.dasgupta.careercompass.questionnaire.questionnairequestion.QuestionnaireQuestionDto;
 import com.dasgupta.careercompass.questionnaire.questionnairequestion.QuestionnaireQuestionMapper;
 import jakarta.validation.ValidationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
