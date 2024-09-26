@@ -9,6 +9,7 @@ import com.dasgupta.careercompass.job.JobService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     private final JobService jobService;
     private final CandidateMapper candidateMapper;
 
-    public BookmarkServiceImpl(BookmarkRepository bookmarkRepository, JobService jobService, JobMapper jobMapper,
+    public BookmarkServiceImpl(BookmarkRepository bookmarkRepository, @Lazy JobService jobService, JobMapper jobMapper,
                                CandidateService candidateService, CandidateMapper candidateMapper) {
         this.bookmarkRepository = bookmarkRepository;
         this.jobMapper = jobMapper;

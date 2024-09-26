@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,7 +27,7 @@ public class JobServiceImpl implements JobService {
     private final LoggedInCompanyJobMapper loggedInCompanyJobMapper;
     private final CompanyService companyService;
 
-    public JobServiceImpl(JobRepository jobRepository, JobMapper jobMapper, BookmarkService bookmarkService,
+    public JobServiceImpl(JobRepository jobRepository, JobMapper jobMapper, @Lazy BookmarkService bookmarkService,
                           JobCreateMapper jobCreateMapper, LoggedInCompanyJobMapper loggedInCompanyJobMapper,
                           CompanyService companyService) {
         this.jobRepository = jobRepository;
