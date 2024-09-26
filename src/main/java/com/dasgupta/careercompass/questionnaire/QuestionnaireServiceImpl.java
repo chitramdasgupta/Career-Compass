@@ -7,6 +7,8 @@ import com.dasgupta.careercompass.questionnaire.questionnairequestion.Questionna
 import com.dasgupta.careercompass.questionnaire.questionnairequestion.QuestionnaireQuestionDto;
 import com.dasgupta.careercompass.questionnaire.questionnairequestion.QuestionnaireQuestionMapper;
 import jakarta.validation.ValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class QuestionnaireServiceImpl implements QuestionnaireService {
+    private static final Logger log = LoggerFactory.getLogger(QuestionnaireServiceImpl.class);
+
     private final QuestionnaireRepository questionnaireRepository;
     private final QuestionnaireQuestionMapper questionnaireQuestionMapper;
     private final JobService jobService;
@@ -34,6 +38,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Override
     public List<QuestionnaireQuestionDto> getQuestionsByQuestionnaireId(Integer id) {
+        log.info("get questions by questionnaire id called with questionnaire id: {}", id);
+
         return questionnaireRepository.findById(id).map(Questionnaire::getQuestionnaireQuestions)
                 .map(questions -> questions.stream().map(questionnaireQuestionMapper::toDto)
                         .collect(Collectors.toList()))
@@ -42,6 +48,9 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Override
     public JobDto createQuestionnaireForJob(int jobId, QuestionnaireDto questionnaireDto, Integer userId) {
+        log.info("create questionnaire for jobs called with jobId: {}, questionnaire details: {}, and userId: {}",
+                jobId, questionnaireDto, userId);
+
         JobDto job = jobService.getJobById(jobId, userId);
 
         if (!job.getCompany().getUser().getId().equals(userId)) {
@@ -59,6 +68,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Override
     public QuestionnaireDto getJobQuestionnaire(int jobId, Integer userId) {
+        log.info("get job questionnaire called with jobId: {}, and userId: {}", jobId, userId);
+
         JobDto job = jobService.getJobById(jobId, userId);
 
         if (!job.getCompany().getUser().getId().equals(userId)) {

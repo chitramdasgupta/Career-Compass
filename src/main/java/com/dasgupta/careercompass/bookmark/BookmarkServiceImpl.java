@@ -1,9 +1,14 @@
 package com.dasgupta.careercompass.bookmark;
 
-import com.dasgupta.careercompass.candidate.*;
-import com.dasgupta.careercompass.job.*;
+import com.dasgupta.careercompass.candidate.CandidateDto;
+import com.dasgupta.careercompass.candidate.CandidateMapper;
+import com.dasgupta.careercompass.candidate.CandidateService;
+import com.dasgupta.careercompass.job.JobDto;
+import com.dasgupta.careercompass.job.JobMapper;
+import com.dasgupta.careercompass.job.JobService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,13 +16,14 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 public class BookmarkServiceImpl implements BookmarkService {
+    private static final Logger log = LoggerFactory.getLogger(BookmarkServiceImpl.class);
+
     private final BookmarkRepository bookmarkRepository;
     private final CandidateService candidateService;
     private final JobMapper jobMapper;
     private final JobService jobService;
     private final CandidateMapper candidateMapper;
 
-    @Autowired
     public BookmarkServiceImpl(BookmarkRepository bookmarkRepository, JobService jobService, JobMapper jobMapper,
                                CandidateService candidateService, CandidateMapper candidateMapper) {
         this.bookmarkRepository = bookmarkRepository;
@@ -27,7 +33,10 @@ public class BookmarkServiceImpl implements BookmarkService {
         this.candidateMapper = candidateMapper;
     }
 
+    @Override
     public void addBookmark(Integer userId, Integer jobId) {
+        log.info("add bookmark called with userId: {}, jobId: {}", userId, jobId);
+
         CandidateDto candidate = candidateService.getCandidateByUserId(userId);
         JobDto job = jobService.getJobById(jobId, userId);
 
@@ -37,7 +46,10 @@ public class BookmarkServiceImpl implements BookmarkService {
         }
     }
 
+    @Override
     public void removeBookmark(Integer userId, Integer jobId) {
+        log.info("remove bookmark called with userId: {} and jobId: {}", userId, jobId);
+
         CandidateDto candidate = candidateService.getCandidateByUserId(userId);
         JobDto job = jobService.getJobById(jobId, userId);
 
@@ -47,6 +59,8 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public Page<JobDto> getBookmarkedJobs(Integer userId, Pageable pageable) {
+        log.info("get bookmarked jobs called with userId: {}", userId);
+
         CandidateDto candidate = candidateService.getCandidateByUserId(userId);
 
         Page<Bookmark> bookmarks = bookmarkRepository.findByCandidateId(candidate.getId(), pageable);
@@ -54,7 +68,10 @@ public class BookmarkServiceImpl implements BookmarkService {
         return bookmarks.map(bookmark -> jobMapper.toDto(bookmark.getJob(), true));
     }
 
+    @Override
     public boolean isJobBookmarked(Integer userId, Integer jobId) {
+        log.info("Is job bookmarked called with userId: {}, and jobId: {}", userId, jobId);
+
         CandidateDto candidate = candidateService.getCandidateByUserId(userId);
         JobDto job = jobService.getJobById(jobId, userId);
 
