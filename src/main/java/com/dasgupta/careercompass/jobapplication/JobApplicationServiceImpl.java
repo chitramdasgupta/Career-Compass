@@ -1,8 +1,13 @@
 package com.dasgupta.careercompass.jobapplication;
 
 import com.dasgupta.careercompass.bookmark.BookmarkService;
-import com.dasgupta.careercompass.candidate.*;
-import com.dasgupta.careercompass.job.*;
+import com.dasgupta.careercompass.candidate.CandidateDto;
+import com.dasgupta.careercompass.candidate.CandidateMapper;
+import com.dasgupta.careercompass.candidate.CandidateService;
+import com.dasgupta.careercompass.job.Job;
+import com.dasgupta.careercompass.job.JobDto;
+import com.dasgupta.careercompass.job.JobMapper;
+import com.dasgupta.careercompass.job.JobService;
 import com.dasgupta.careercompass.questionnaire.answer.AnswerService;
 import com.dasgupta.careercompass.user.User;
 import jakarta.transaction.Transactional;

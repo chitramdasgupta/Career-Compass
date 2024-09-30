@@ -1,6 +1,5 @@
 package com.dasgupta.careercompass.user;
 
-import com.dasgupta.careercompass.job.Job;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

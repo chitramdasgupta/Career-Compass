@@ -1,7 +1,6 @@
 package com.dasgupta.careercompass.job;
 
 import com.dasgupta.careercompass.company.CompanyDto;
-import com.dasgupta.careercompass.questionnaire.QuestionnaireDto;
 import lombok.Getter;
 import lombok.Setter;
 

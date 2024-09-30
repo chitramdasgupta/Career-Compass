@@ -4,7 +4,10 @@ import com.dasgupta.careercompass.candidate.Candidate;
 import com.dasgupta.careercompass.company.Company;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 

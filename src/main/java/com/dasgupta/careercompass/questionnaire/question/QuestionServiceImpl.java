@@ -1,7 +1,5 @@
 package com.dasgupta.careercompass.questionnaire.question;
 
-import com.dasgupta.careercompass.company.CompanyServiceImpl;
-import com.dasgupta.careercompass.job.JobDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;

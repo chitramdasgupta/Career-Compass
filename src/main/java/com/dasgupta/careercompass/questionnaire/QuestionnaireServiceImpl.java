@@ -1,7 +1,5 @@
 package com.dasgupta.careercompass.questionnaire;
 
-import com.dasgupta.careercompass.company.CompanyDto;
-import com.dasgupta.careercompass.company.CompanyService;
 import com.dasgupta.careercompass.job.*;
 import com.dasgupta.careercompass.questionnaire.question.Question;
 import com.dasgupta.careercompass.questionnaire.question.QuestionService;
@@ -78,7 +76,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         Questionnaire questionnaire = questionnaireRepository.getQuestionnaireByJobId(jobId);
         log.info("Questionnaire found with id: {}", questionnaire.getId());
 
-        return  questionnaireMapper.toDto(questionnaire);
+        return questionnaireMapper.toDto(questionnaire);
     }
 
     private void createAndSaveQuestionnaire(QuestionnaireDto questionnaireDto, Job job) {
