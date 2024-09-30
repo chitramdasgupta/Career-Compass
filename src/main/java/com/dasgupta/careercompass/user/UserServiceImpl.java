@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserByEmail(String email) {
         log.info("Searching for user with email: {}", email);
+
         return userRepository.findByEmail(email)
                 .map(user -> {
                     log.info("Found user with email: {}", user.getEmail());
