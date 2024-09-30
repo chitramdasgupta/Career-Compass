@@ -10,6 +10,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.awt.print.Book;
 import java.util.Objects;
 
 @Getter
@@ -40,8 +41,8 @@ public class Bookmark {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Job job = (Job) o;
-        return getId() != null && Objects.equals(getId(), job.getId());
+        Bookmark bookmark = (Bookmark) o;
+        return getId() != null && Objects.equals(getId(), bookmark.getId());
     }
 
     @Override

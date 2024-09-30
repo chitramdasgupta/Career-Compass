@@ -75,7 +75,10 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public QuestionnaireDto getJobQuestionnaire(int jobId, Integer userId) {
         log.info("get job questionnaire called with jobId: {}, and userId: {}", jobId, userId);
 
-        return  questionnaireMapper.toDto(questionnaireRepository.getQuestionnaireByJobId(jobId));
+        Questionnaire questionnaire = questionnaireRepository.getQuestionnaireByJobId(jobId);
+        log.info("Questionnaire found with id: {}", questionnaire.getId());
+
+        return  questionnaireMapper.toDto(questionnaire);
     }
 
     private void createAndSaveQuestionnaire(QuestionnaireDto questionnaireDto, Job job) {

@@ -44,8 +44,8 @@ public class Questionnaire {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Company company = (Company) o;
-        return getId() != null && Objects.equals(getId(), company.getId());
+        Questionnaire questionnaire = (Questionnaire) o;
+        return getId() != null && Objects.equals(getId(), questionnaire.getId());
     }
 
     @Override
