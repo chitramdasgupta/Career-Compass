@@ -3,11 +3,13 @@ package com.dasgupta.careercompass.job;
 import com.dasgupta.careercompass.company.CompanyDto;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@Accessors(chain = true)
 public class JobDto {
     private Integer id;
     private String title;

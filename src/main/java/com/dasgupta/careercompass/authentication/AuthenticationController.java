@@ -23,7 +23,8 @@ public class AuthenticationController {
     private final Environment env;
     private final AuthResponseUserMapper authResponseUserMapper;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, Environment env, AuthResponseUserMapper authResponseUserMapper) {
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, Environment env,
+                                    AuthResponseUserMapper authResponseUserMapper) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
         this.env = env;
@@ -52,14 +53,17 @@ public class AuthenticationController {
         ResponseCookie jwtCookie = getJwtCookie(authenticatedUser);
         log.info("Response Cookie with JWT is generated");
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(authResponseUserMapper.toDto(authenticatedUser));
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .body(authResponseUserMapper.toDto(authenticatedUser));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout() {
         log.info("Logout endpoint called");
 
-        ResponseCookie jwtCookie = ResponseCookie.from("jwt", "").httpOnly(true).secure(Arrays.asList(env.getActiveProfiles()).contains("prod")).path("/").maxAge(0).build();
+        ResponseCookie jwtCookie = ResponseCookie.from("jwt", "").httpOnly(true)
+                .secure(Arrays.asList(env.getActiveProfiles()).contains("prod")).path("/")
+                .maxAge(0).build();
 
         log.info("JWT cookie cleared");
 
@@ -73,6 +77,7 @@ public class AuthenticationController {
         boolean isSecure = Arrays.asList(env.getActiveProfiles()).contains("prod");
         log.info("isSecure: {}", isSecure);
 
-        return ResponseCookie.from("jwt", jwtToken).httpOnly(true).secure(isSecure).path("/").maxAge(jwtService.getExpirationTime()).build();
+        return ResponseCookie.from("jwt", jwtToken).httpOnly(true).secure(isSecure).path("/")
+                .maxAge(jwtService.getExpirationTime()).build();
     }
 }
